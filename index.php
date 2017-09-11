@@ -1,7 +1,7 @@
 <?php
     $title = "PHP SpliceTest";
     include("html/defaultHeader.html");
-    include("customerTable.php");
+    include("html/welcome.html");
 
     include("html/defaultFooter.html");
 ?>
