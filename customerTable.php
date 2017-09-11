@@ -35,24 +35,16 @@ include('functionCustomers.php');
 
 $sql = $conn->query("SELECT * FROM customer;");
 while($row = mysqli_fetch_assoc($sql)) {
-    if (isset($_GET['id'])) {
-        if ($_GET['id'] == $row['id']) {
-            //save to session
-            $_SESSION['userEditing'] = $row['id'];
-            customerTableRowEdit($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
-        } else {
-            customerTableRow($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
-        }
-    }elseif(isset($_SESSION['userEditing'])){
-        if ($_SESSION['userEditing'] == $row['id']) {
-            customerTableRowEdit($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
-        } else {
-            customerTableRow($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
-        }
+
+    if((isset($_GET['id']) && $_GET['id'] == $row['id']) || (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $row['id'])){
+        $_SESSION['userEditing'] = $row['id'];
+        customerTableRowEdit($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
     }else{
         customerTableRow($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
     }
 }
+
+
 ?>
 </table>
 <?php
