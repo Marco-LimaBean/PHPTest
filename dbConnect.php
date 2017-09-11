@@ -6,10 +6,8 @@
  * Time: 1:32 PM
  */
 
-$conn = mysqli_connect("127.0.0.1", "root", "", "dvd_shop");
-
-
-class dbConnect{
+class dbConnect
+{
     private $host, $user, $password, $database, $conn;
 
     /**
@@ -26,22 +24,67 @@ class dbConnect{
         $this->password = $password;
         $this->database = $database;
 
-        $this->conn =  mysqli_connect($this->host, $this->user, $this->password, $this->database);
+        $this->conn = mysqli_connect($this->host, $this->user, $this->password, $this->database);
     }
 
-    public function fetch($query){
+    public function fetch($query)
+    {
         $sql = $this->conn->query($query);
         $result = array();
-        while($row = mysqli_fetch_assoc($sql)) {
+        while ($row = mysqli_fetch_assoc($sql)) {
             array_push($result, $row);
         }
         $sql->close();
         return $result;
     }
 
-    public function update($table, $set, $where){
-        $query = "UPDATE " . $table . "SET " . $set . " WHERE" . $where;
+    /**
+     * @param $table
+     * @param $set array of customer
+     * @param $where
+     * @return bool|mysqli_result
+     */
+    public function update($table, $set, $where)
+    {
+        $id = $set->getId();
+        $name = $set->getName();
+        $surname = $set->getSurname();
+        $contact_number = $set->getContactNumber();
+        $email = $set->getEmail();
+        $sa_id_number = $set->getSaIdNumber();
+        $address = $set->getAddress();
+
+        $setQuery = "id = " . $id . ", name = " . $name . ", surname = " . $surname
+            . ", contact_number = " . $contact_number . ", email: " . $email . " sa_id_number = " . $sa_id_number
+            . ", address = " . $address;
+
+
+        $query = "UPDATE " . $table . "SET " . $setQuery . " WHERE" . $where;
+
         return $this->conn->query($query);
+        //TODO: make sure that the return is true/false;
+    }
+
+    public function insert($table, $set){
+        $name = $set->getName();
+        $surname = $set->getSurname();
+        $contact_number = $set->getContactNumber();
+        $email = $set->getEmail();
+        $sa_id_number = $set->getSaIdNumber();
+        $address = $set->getAddress();
+
+        $values = "'" . $name . "', '". $surname . "', '" . $contact_number . "', '" . $email . "', '" . $sa_id_number . "', '" . $address . "'";
+
+        $i = 1; //counter for columnNames.
+        $columnNames = "name, surname, contact_number, email, sa_id_number, address";
+        $query = "INSERT INTO " . $table . " (" . $columnNames .") VALUES (" . $values . ");";
+
+        return $this->conn->query($query);
+    }
+
+    public function delete($table, $where)
+    {
+        return $this->conn->query("DELETE FROM " . $table . " WHERE " . $where);
     }
 
 }

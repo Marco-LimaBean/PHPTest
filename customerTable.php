@@ -8,6 +8,14 @@
 
 include('dbConnect.php');
 include('functionCustomers.php');
+
+//page arrays
+$_SESSION['customer'] = array();
+$dbConnect = new dbConnect();
+
+//GET ALL CUSTOMERS
+$_SESSION['customer'] = getCustomer("1=1");
+
 //CREATE TABLE FOR CUSTOMERS
 ?>
     <table style="width:100%">
@@ -33,26 +41,52 @@ include('functionCustomers.php');
         </tr>
         <?php
 
-        $sql = $conn->query("SELECT * FROM customer;");
-        while ($row = mysqli_fetch_assoc($sql)) {
-            if(isset($_GET['id'])) {
-                //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
-                $_SESSION['userEditing'] = $_GET['id'];
-            }
+        foreach ($_SESSION['customer'] as $key => $value) {
+                if(isset($_GET['id'])) {
+                    //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
+                    $_SESSION['userEditing'] = $_GET['id'];
+                }
 
-            if (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $row['id']) {
-                $_SESSION['userEditing'] = $row['id'];
-                customerTableRowEdit($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
-            } else {
-                customerTableRow($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
+                if (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $value->getId()) {
+                    $_SESSION['userEditing'] = $value->getId();
+                    customerTableRowEdit($value);
+                } else {
+                    customerTableRow($value);
+                }
             }
-        }
 
         if (isset($_POST['addCustomer'])) {
             unset($_SESSION['userEditing'], $_GET['id'], $_POST['addCustomer']);
             $addCustID = getHighestCustID() + 1;
-            customerTableRowEdit($addCustID);
+            customerTableRowEdit(new Customer());
         }
+
+
+//        $sql = $conn->query("SELECT * FROM customer;");
+//
+//
+//        while ($row = mysqli_fetch_assoc($sql)) {
+//
+//
+//
+//            if(isset($_GET['id'])) {
+//                //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
+//                $_SESSION['userEditing'] = $_GET['id'];
+//            }
+//
+//            if (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $row['id']) {
+//                $_SESSION['userEditing'] = $row['id'];
+//                customerTableRowEdit($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
+//            } else {
+//                customerTableRow($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
+//            }
+//        }
+//
+//        if (isset($_POST['addCustomer'])) {
+//            unset($_SESSION['userEditing'], $_GET['id'], $_POST['addCustomer']);
+//            $addCustID = getHighestCustID() + 1;
+//            customerTableRowEdit($addCustID);
+//        }
 
 
         ?>
@@ -70,7 +104,7 @@ if(isset($_GET['id'], $_GET['delete']) || isset($_SESSION['userEditing'], $_POST
         echo "checks passed";
         echo $delete;
 
-        $message;
+        $message = NULL;
 
         if(deleteCustomer($_GET['id'])){
             $message = "Customer has been deleted";
@@ -122,13 +156,16 @@ if (isset($_POST['updateCustomer'])) {
              */
 
             if ($_POST['updateCustomer'] == "Save") {
-                updateCustomer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
-                    $_POST['sa_id_number'], $_POST['address'], $_POST['id']);
-                //reset the session variable.
+                updateCustomer(in_array($_SESSION['userEditing'], $_SESSION['customer']->getId()));
+//
+//                updateCustomer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
+//                    $_POST['sa_id_number'], $_POST['address'], $_POST['id']);
+//                //reset the session variable.
                 unset($_SESSION['userEditing']);
             } else {
-                updateCustomer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
-                    $_POST['sa_id_number'], $_POST['address']);
+                updateCustomer(new Customer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
+                    $_POST['sa_id_number'], $_POST['address']), true);
+                echo "Else update customer called";
                 //reset the session variable.
                 unset($_SESSION['userEditing']);
             }
