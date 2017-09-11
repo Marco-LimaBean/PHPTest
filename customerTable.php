@@ -44,9 +44,18 @@ while($row = mysqli_fetch_assoc($sql)) {
     }
 }
 
+if(isset($_POST['addCustomer'])){
+    unset($_SESSION['userEditing'], $_GET['id']);
+    $addCustID = getHighestCustID() + 1;
+    customerTableRowEdit($addCustID, "", "", "", "", "", "", "");
+}
+
 
 ?>
 </table>
+<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+    <input name="addCustomer" type="submit" value="Add a customer">
+</form>
 <?php
 
 //if the save button is clicked to update the customer
@@ -81,8 +90,19 @@ if(isset($_POST['updateCustomer'])){
              * END OF SCRUBBING USER DATA
              */
 
-            updateCustomer($_POST['id'], $_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
-                $_POST['sa_id_number'], $_POST['address']);
+            if($_POST['updateCustomer'] == "Save"){
+                updateCustomer($_POST['id'], $_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
+                    $_POST['sa_id_number'], $_POST['address']);
+                //reset the session variable.
+                unset($_SESSION['userEditing']);
+            }else{
+                addCustomer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
+                    $_POST['sa_id_number'], $_POST['address']);
+            }
+
+//            //can't use header as header information has already been sent... maybe output buffering?
+//            header("Refresh: 0");
+            refresh();
 
         }while(false);
         //if the above loop terminated due to error:

@@ -21,6 +21,13 @@ function jsAlert($msg){
     <?php
 }
 
+/** Refreshes the page.
+ *
+ */
+function refresh(){
+    echo '<META HTTP-EQUIV=REFRESH CONTENT="1;">';
+}
+
 /** Redirects to $url
  * @param $url \http\Url redirect to chosen http url
  */
