@@ -39,6 +39,9 @@ class dbConnect{
         return $result;
     }
 
-
+    public function update($table, $set, $where){
+        $query = "UPDATE " . $table . "SET " . $set . " WHERE" . $where;
+        return $this->conn->query($query);
+    }
 
 }
