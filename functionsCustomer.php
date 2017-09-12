@@ -22,15 +22,18 @@ function classDatabase()
 
 
 /** Class to get customers according to where.
- * @param $Where string this is the where clause. Use e.g. 1=1 for all results.
+ * @param array $where
+ * @param string $condition default AND, define ' OR '
  * @return array Customer
+ * @internal param string $Where this is the where clause. Use e.g. 1=1 for all results.
  */
-function getCustomer($Where)
+function getCustomer($where = [], $condition = ' AND ')
 {
     if (!class_exists("dbConnect")) require("dbConnect.php");
     if (!class_exists("customer")) require("customer.php");
     $dbConnect = new dbConnect();
-    $results = $dbConnect->fetch("SELECT * FROM customer WHERE " . $Where);
+
+    $results = $dbConnect->fetch("SELECT * FROM customer ", $where, $condition);
 
     $customer = array();
 
@@ -42,35 +45,6 @@ function getCustomer($Where)
     return $customer;
 }
 
-///** Updates a customer's details. Note that the DB connection variable called $conn must be initialized before calling this function.
-// * @param $name
-// * @param $surname
-// * @param $contact_number
-// * @param $email
-// * @param $sa_id_number
-// * @param $address
-// * @param bool|number $id number Note that the default is false
-// */
-//function updateCustomer($name, $surname, $contact_number, $email, $sa_id_number, $address, $id = false)
-//{
-//    if (!isset($dbConnect)) {
-//        if (!class_exists("dbConnect")) include('dbConnect.php');
-//        $dbConnect = new dbConnect();
-//    }
-//
-//
-//    if (!$id) { //add new customer
-//
-//        $sql = $conn->prepare("INSERT INTO customer (name, surname, contact_number, email, sa_id_number, address) VALUES (?,?,?,?,?,?)");
-//        $sql->bind_param("ssssss", $name, $surname, $contact_number, $email, $sa_id_number, $address);
-//    } else {
-//        $sql = $conn->prepare("UPDATE customer SET name = ?, surname = ?, contact_number = ?, email = ?, sa_id_number = ?, address = ? WHERE id = ?;");
-//        $sql->bind_param("sssssss", $id, $name, $surname, $contact_number, $email, $sa_id_number, $address);
-//    }
-//    $sql->execute();
-//    $sql->close();
-//}
-
 /** Either updates or creates a new customer based on the given customer array.
  * @param $customer customer
  * @param bool $isNew default is false;
@@ -81,7 +55,6 @@ function updateCustomer($customer, $isNew = false)
         if (!class_exists("dbConnect")) include('dbConnect.php');
         $dbConnect = new dbConnect();
     }
-
 
     if($isNew) $dbConnect->insert("customer", $customer);
     else $dbConnect->update("customer", $customer, "id = " . $customer->getId());
@@ -169,11 +142,10 @@ function getHighestCustID()
     }
 
     $sql = $conn->query("SELECT id FROM customer ORDER BY id DESC LIMIT 1;");
-    if ($row = mysqli_fetch_assoc($sql)) {
-        $sql->close();
-        return $row['id'];
-    } else {
-        $sql->close();
-        die("Failed to create a valid id");
+    $row = mysqli_fetch_assoc($sql);
+    if ($row) {
+        $row = $row['id'];
     }
+    $sql->close();
+    return $row;
 }

@@ -27,8 +27,23 @@ class dbConnect
         $this->conn = mysqli_connect($this->host, $this->user, $this->password, $this->database);
     }
 
-    public function fetch($query)
+    /**
+     * @param $query
+     * @param array $where
+     * @param string $condition
+     * @return array
+     */
+    public function fetch($query, $where =[], $condition = ' AND ')
     {
+        if(is_string($where)) {
+            $where = [$where];
+        }
+
+        if($where) {
+            $query .= ' WHERE ';
+            $query .= implode($condition, $where);
+        }
+
         $sql = $this->conn->query($query);
         $result = array();
         while ($row = mysqli_fetch_assoc($sql)) {
@@ -40,7 +55,7 @@ class dbConnect
 
     /**
      * @param $table
-     * @param $set array of customer
+     * @param $set customer array of customer
      * @param $where
      * @return bool|mysqli_result
      */
@@ -62,9 +77,13 @@ class dbConnect
         $query = "UPDATE " . $table . "SET " . $setQuery . " WHERE" . $where;
 
         return $this->conn->query($query);
-        //TODO: make sure that the return is true/false;
     }
 
+    /**
+     * @param $table
+     * @param $set customer
+     * @return bool|mysqli_result
+     */
     public function insert($table, $set){
         $name = $set->getName();
         $surname = $set->getSurname();
@@ -82,6 +101,11 @@ class dbConnect
         return $this->conn->query($query);
     }
 
+    /**
+     * @param $table
+     * @param $where
+     * @return bool|mysqli_result
+     */
     public function delete($table, $where)
     {
         return $this->conn->query("DELETE FROM " . $table . " WHERE " . $where);

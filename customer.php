@@ -34,7 +34,7 @@ class customer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getId()
     {
@@ -42,7 +42,7 @@ class customer
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
     public function setId($id)
     {
@@ -50,7 +50,7 @@ class customer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -58,7 +58,7 @@ class customer
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -66,7 +66,7 @@ class customer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSurname()
     {
@@ -74,7 +74,7 @@ class customer
     }
 
     /**
-     * @param mixed $surname
+     * @param string $surname
      */
     public function setSurname($surname)
     {
@@ -82,7 +82,7 @@ class customer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getContactNumber()
     {
@@ -90,7 +90,7 @@ class customer
     }
 
     /**
-     * @param mixed $contact_number
+     * @param string $contact_number
      */
     public function setContactNumber($contact_number)
     {
@@ -98,7 +98,7 @@ class customer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEmail()
     {
@@ -106,7 +106,7 @@ class customer
     }
 
     /**
-     * @param mixed $email
+     * @param string $email
      */
     public function setEmail($email)
     {
@@ -114,7 +114,7 @@ class customer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSaIdNumber()
     {
@@ -122,7 +122,7 @@ class customer
     }
 
     /**
-     * @param mixed $sa_id_number
+     * @param string $sa_id_number
      */
     public function setSaIdNumber($sa_id_number)
     {
@@ -130,7 +130,7 @@ class customer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAddress()
     {
@@ -138,13 +138,12 @@ class customer
     }
 
     /**
-     * @param mixed $address
+     * @param string $address
      */
     public function setAddress($address)
     {
         $this->address = $address;
     }
-
 
     public function toString(){
         return "ID: " . $this->id . " Name: " . $this->name . " Surname: " . $this->surname .
