@@ -84,6 +84,20 @@ function tableRowTD($value){
 }
 
 
+/** Adds a script. Use scriptName for URL, defer defaults to none (''), otherwise use defer='true', default type is JS.
+ * @param $scriptName
+ * @param string $defer
+ * @param string $type
+ */
+function addScript($scriptName, $defer = '', $type = "text/javascript"){
+    ?>
+    <script src="<?= htmlspecialchars($scriptName) ?>"
+            type="<?= htmlspecialchars($type) ?>" <?= htmlspecialchars($defer) ?> ></script>
+
+    <?php
+}
+
+
 /** Binary Search through array using given value
  * @param $needle string
  * @param $haystack array

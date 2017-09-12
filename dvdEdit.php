@@ -13,7 +13,10 @@ if (!class_exists("dvd")) require("dvd.php");
 
 
 //print category form:
-dvdEditForm(getDvd(), getCategories());
+$dvdList = getDvd();
+$categoryList = getCategories();
+
+dvdEditForm($dvdList, $categoryList);
 
 if(isset($_POST['submitEditDvd'], $_POST['dvd'])){
     //need to check each form item individually as only those with a value entered are the ones to change.
@@ -29,6 +32,11 @@ if(isset($_POST['submitEditDvd'], $_POST['dvd'])){
 }
 
 //JQUERY
+//pass objects
+json_encode($dvdList);
+json_encode($categoryList);
 
+
+addScript("/js/dvd-edit.js");
 
 include_once ("html/defaultFooter.html");

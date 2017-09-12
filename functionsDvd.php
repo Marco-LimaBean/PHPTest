@@ -126,7 +126,8 @@ function dvdEditForm($dvdList, $category){
                 <option value="---" selected disabled> --- </option>
                 <?php
                     foreach ($dvdList as $dvd){
-                        echo "<option value='" . htmlspecialchars($dvd->getId()). "'> " . htmlspecialchars($dvd->getName()) . " (" . htmlspecialchars($dvd->getReleaseDate()). ")</option>";
+                        echo "<option value='" . htmlspecialchars($dvd->getId()). "'> " . htmlspecialchars($dvd->getName()) . " (" . htmlspecialchars($dvd->getReleaseDate()). ")
+                        </option>";
                     }
 
                 ?>
@@ -141,7 +142,8 @@ function dvdEditForm($dvdList, $category){
                 <option value="---" selected disabled> --- </option>
                 <?php
                     foreach ($category as $value){
-                        echo "<option value ='" . $value->getId() . "'> " . $value->getCategory() . "</option>";
+                        echo "<option value ='" . $value->getId() . "'> " . $value->getCategory() . "</option>
+                        ";
                     }
                 ?>
             </select>
