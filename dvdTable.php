@@ -26,11 +26,13 @@ if(!isset($customerOrder) || $customerOrder == NULL){
 
 //if customer requests to add DVD to list:
 if(isset($_GET['id'], $_GET['add'])){
-    echo "<br> SearchDVD: " . var_dump(searchDvd($dvdList, $_GET['id'])) . "<br>";
-    if(($dvd = searchDvd($dvdList, $_GET['id']))){ //add dvd if the dvd id is valid.
-        echo "<br>DVD: <br>" . var_dump($dvd) . " &nbsp; END<br>";
-        //loop through customer order to check if the dvd id has already been added.
+//    echo "<br> SearchDVD: " . var_dump(searchDvd($dvdList, $_GET['id'])) . "<br>";
+    $dvd = searchDvd($dvdList, $_GET['id']);
+//    echo "<br> 2nd SearchDVD: " . var_dump($dvd) . "<br>";
+    if($dvd){ //add dvd if the dvd id is valid.
+        echo "<pre>";
         $customerOrder = customerOrderAddDvd($customerOrder, $dvd);
+        var_dump($customerOrder);
     }else{
         echo "invalid DVD ID specified";
     }

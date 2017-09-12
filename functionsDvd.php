@@ -47,8 +47,7 @@ function searchDvd($dvdList, $dvdID){
  * @return array|int
  */
 function customerOrderAddDvd($customerOrder, $dvd){
-    var_dump($customerOrder, $dvd);
-    echo "<br>";
+    var_dump($dvd);
     if(!empty($customerOrder )){
         foreach ($customerOrder as $value){
             print_r($value);
@@ -58,7 +57,8 @@ function customerOrderAddDvd($customerOrder, $dvd){
             }
         }
     }
-    return array_push($customerOrder, $dvd);
+    array_push($customerOrder, $dvd);
+    return $customerOrder;
 }
 
 /**

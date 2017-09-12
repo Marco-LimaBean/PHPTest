@@ -80,17 +80,19 @@ function deleteCustomer($id)
  */
 function customerTableRow($customerArray)
 {
-    echo "<tr>
-            <td>" . htmlspecialchars($customerArray->getId()) . "</td>" . "
-            <td>" . htmlspecialchars($customerArray->getName()) . "</td>" . "
-            <td>" . htmlspecialchars($customerArray->getSurname()) . "</td>" . "
-            <td>" . htmlspecialchars($customerArray->getContactNumber()) . "</td>" . "
-            <td>" . htmlspecialchars($customerArray->getEmail()) . "</td>" . "
-            <td>" . htmlspecialchars($customerArray->getSaIdNumber()) . "</td>" . "
-            <td>" . htmlspecialchars($customerArray->getAddress()) . "</td>" . "
-            <td> <a href='?id=" . htmlspecialchars($customerArray->getId()) . "'>edit</a> 
-                <a href='?id=" . htmlspecialchars($customerArray->getId()) . "&delete=TRUE'>delete</a>
-            </td>" . "
+
+    echo "<tr>";
+    customerRowTD($customerArray->getId());
+    customerRowTD($customerArray->getName());
+    customerRowTD($customerArray->getSurname());
+    customerRowTD($customerArray->getContactNumber());
+    customerRowTD($customerArray->getEmail());
+    customerRowTD($customerArray->getSaIdNumber());
+    customerRowTD($customerArray->getAddress());
+
+    echo "<td> <a href='?id=" . htmlspecialchars($customerArray->getId()) . "'>edit</a> 
+               <a href='?id=" . htmlspecialchars($customerArray->getId()) . "&delete=TRUE'>delete</a>
+          </td>" . "
          </tr>";
 }
 
@@ -103,31 +105,31 @@ function customerTableRowEdit($customerArray)
                 <form action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "' method='post'>
                     <td> 
                         " . htmlspecialchars($customerArray->getId()) . "
-                    </td>" . "
-                    <td> 
-                        <input name='name' value='" . htmlspecialchars($customerArray->getName()) . "' placeholder='" . htmlspecialchars($customerArray->getName()) . "' required> 
-                    </td>" . "
-                    <td> 
-                        <input name='surname' value='" . htmlspecialchars($customerArray->getSurname()) . "' placeholder='" . htmlspecialchars($customerArray->getSurname()) . "' required> 
-                    </td>" . "
-                    <td> 
-                        <input name='contact_number' value='" . htmlspecialchars($customerArray->getContactNumber()) . "' placeholder='" . htmlspecialchars($customerArray->getContactNumber()) . "' required> 
-                    </td>" . "
-                    <td> 
-                        <input name='email' value='" . htmlspecialchars($customerArray->getEmail()) . "' placeholder='" . htmlspecialchars($customerArray->getEmail()) . "' type='email' required> 
-                    </td>" . "
-                    <td> 
-                        <input name='sa_id_number' value='" . htmlspecialchars($customerArray->getSaIdNumber()) . "' placeholder='" . htmlspecialchars($customerArray->getSaIdNumber()) . "' required> 
-                    </td>" . "
-                    <td> 
-                        <input name='address' value='" . htmlspecialchars($customerArray->getAddress()) . "' placeholder='" . htmlspecialchars($customerArray->getAddress()) . "' required>  
-                    </td>" . "<td> 
-                        <input type='submit' name='updateCustomer' value='save'> 
-                        <input type='submit' name='deleteCustomer' value='delete'>
-                        <input type='hidden' name='id' value='" . htmlspecialchars($customerArray->getId()) . "'>
-                    </td>" . "
-                </form>
-              </tr>";
+                    </td>";
+        customerRowEditTD('name', $customerArray->getName(), $customerArray->getName());
+        customerRowEditTD('surname', $customerArray->getSurname(), $customerArray->getSurname());
+        customerRowEditTD('contact_number', $customerArray->getContactNumber(), $customerArray->getContactNumber());
+        customerRowEditTD('email', $customerArray->getEmail(), $customerArray->getEmail(), "true", "email");
+        customerRowEditTD('sa_id_number', $customerArray->getSaIdNumber(), $customerArray->getSaIdNumber());
+        customerRowEditTD('address', $customerArray->getAddress(), $customerArray->getAddress());
+    echo "<td>
+                <input type='submit' name='updateCustomer' value='save'> 
+                <input type='submit' name='deleteCustomer' value='delete'>
+                <input type='hidden' name='id' value='" . htmlspecialchars($customerArray->getId()) . "'>
+            </td>" . "
+        </form>
+    </tr>";
+
+}
+
+function customerRowEditTD($name, $value, $placeholder = "", $required = "true", $type = "text"){
+    echo "<td> 
+            <input name='" . $name . "' value='" . htmlspecialchars($value) . "' placeholder='" . htmlspecialchars($placeholder) . "' type='" . $type . "' " . $required . ">
+          </td>";
+}
+
+function customerRowTd($value){
+    echo "<td>" . htmlspecialchars($value) . "</td>";
 }
 
 
