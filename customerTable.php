@@ -7,7 +7,7 @@
  */
 
 include('dbConnect.php');
-include('functionsCustomer.php');
+include_once('functionsCustomer.php');
 
 //page arrays
 $_SESSION['customer'] = array();

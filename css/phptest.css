@@ -2,3 +2,8 @@ table{
     width: 100%;
     margin: auto;
 }
+
+.dvdEditForm{
+    width: 100vw;
+    /*margin-left: 40%;*/
+}

@@ -1,5 +1,7 @@
 <?php
 
+include_once("functionsMain.php");
+
 /** used to check if the customer class exists, if not, it will include it.
  *
  */
@@ -82,13 +84,13 @@ function customerTableRow($customerArray)
 {
 
     echo "<tr>";
-    customerRowTD($customerArray->getId());
-    customerRowTD($customerArray->getName());
-    customerRowTD($customerArray->getSurname());
-    customerRowTD($customerArray->getContactNumber());
-    customerRowTD($customerArray->getEmail());
-    customerRowTD($customerArray->getSaIdNumber());
-    customerRowTD($customerArray->getAddress());
+    tableRowTD($customerArray->getId());
+    tableRowTD($customerArray->getName());
+    tableRowTD($customerArray->getSurname());
+    tableRowTD($customerArray->getContactNumber());
+    tableRowTD($customerArray->getEmail());
+    tableRowTD($customerArray->getSaIdNumber());
+    tableRowTD($customerArray->getAddress());
 
     echo "<td> <a href='?id=" . htmlspecialchars($customerArray->getId()) . "'>edit</a> 
                <a href='?id=" . htmlspecialchars($customerArray->getId()) . "&delete=TRUE'>delete</a>
@@ -106,12 +108,12 @@ function customerTableRowEdit($customerArray)
                     <td> 
                         " . htmlspecialchars($customerArray->getId()) . "
                     </td>";
-        customerRowEditTD('name', $customerArray->getName(), $customerArray->getName());
-        customerRowEditTD('surname', $customerArray->getSurname(), $customerArray->getSurname());
-        customerRowEditTD('contact_number', $customerArray->getContactNumber(), $customerArray->getContactNumber());
-        customerRowEditTD('email', $customerArray->getEmail(), $customerArray->getEmail(), "true", "email");
-        customerRowEditTD('sa_id_number', $customerArray->getSaIdNumber(), $customerArray->getSaIdNumber());
-        customerRowEditTD('address', $customerArray->getAddress(), $customerArray->getAddress());
+        tableRowEditTD('name', $customerArray->getName(), $customerArray->getName());
+        tableRowEditTD('surname', $customerArray->getSurname(), $customerArray->getSurname());
+        tableRowEditTD('contact_number', $customerArray->getContactNumber(), $customerArray->getContactNumber());
+        tableRowEditTD('email', $customerArray->getEmail(), $customerArray->getEmail(), "true", "email");
+        tableRowEditTD('sa_id_number', $customerArray->getSaIdNumber(), $customerArray->getSaIdNumber());
+        tableRowEditTD('address', $customerArray->getAddress(), $customerArray->getAddress());
     echo "<td>
                 <input type='submit' name='updateCustomer' value='save'> 
                 <input type='submit' name='deleteCustomer' value='delete'>
@@ -122,15 +124,7 @@ function customerTableRowEdit($customerArray)
 
 }
 
-function customerRowEditTD($name, $value, $placeholder = "", $required = "true", $type = "text"){
-    echo "<td> 
-            <input name='" . $name . "' value='" . htmlspecialchars($value) . "' placeholder='" . htmlspecialchars($placeholder) . "' type='" . $type . "' " . $required . ">
-          </td>";
-}
 
-function customerRowTd($value){
-    echo "<td>" . htmlspecialchars($value) . "</td>";
-}
 
 
 /** Returns the highest id from the customer table. Note to close the connection afterwards.

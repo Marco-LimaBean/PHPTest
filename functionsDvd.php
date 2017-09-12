@@ -7,6 +7,7 @@
  */
 
 if (!class_exists("dbConnect")) include("dbConnect.php");
+if (!class_exists("category")) include("category.php");
 include_once ("functionsMain.php");
 
 /**
@@ -14,6 +15,8 @@ include_once ("functionsMain.php");
  */
 function getDvd()
 {
+    if (!class_exists("dbConnect")) require("dbConnect.php");
+    if (!class_exists("dvd")) require("dvd.php");
     $dbConnect = new dbConnect();
     $dvd = array();
     $results = $dbConnect->fetch("
@@ -26,6 +29,21 @@ function getDvd()
     }
 
     return $dvd;
+}
+
+/**
+ * @return category[]
+ */
+function getCategories(){
+    $dbConnect = new dbConnect();
+    $category = array();
+    $results = $dbConnect->fetch("
+        SELECT id, category_name
+        FROM category");
+    foreach ($results as $key => $value){
+        array_push($category, new category($value['id'], $value['category_name']));
+    }
+    return $category;
 }
 
 /**
@@ -61,7 +79,7 @@ function customerOrderAddDvd($customerOrder, $dvd){
     return $customerOrder;
 }
 
-/**
+/** Echos <table> table headers.
  *
  */
 function dvdTableStart(){
@@ -77,6 +95,68 @@ function dvdTableStart(){
     </tr>
     <?php
 }
+
+
+/**
+ * @param $array
+ * @param $post $_POST
+ * @param $value
+ * @internal param $_POST
+ * @return array
+ */
+function dvdChangeArray($array, $post, $value){
+    if($post[$value] == ""){
+        return $array;
+    }
+    return array_merge($array, array($value => $post[$value]));
+}
+
+/**
+ * @param $dvdList array
+ * @param $category category[]
+ * @var $dvd dvd
+ */
+function dvdEditForm($dvdList, $category){
+    ?>
+    <div class="dvdEditForm text-center">
+        <h1> DVD Edit: </h1>
+        <form action="" method="post" id="editDvd">
+            <label>Dvd: </label>
+            <select name="dvd" required>
+                <option value="---" selected disabled> --- </option>
+                <?php
+                    foreach ($dvdList as $dvd){
+                        echo "<option value='" . htmlspecialchars($dvd->getId()). "'> " . htmlspecialchars($dvd->getName()) . " (" . htmlspecialchars($dvd->getReleaseDate()). ")</option>";
+                    }
+
+                ?>
+            </select>
+            <label>New Name: </label>
+            <input name="newName" placeholder="The desired name">
+            <br>
+            <label>Date: </label>
+            <input name="date" type="date">
+            <label>Category: </label>
+            <select name="category">
+                <option value="---" selected disabled> --- </option>
+                <?php
+                    foreach ($category as $value){
+                        echo "<option value ='" . $value->getId() . "'> " . $value->getCategory() . "</option>";
+                    }
+                ?>
+            </select>
+            <br>
+            <label>New Description: </label>
+            <br>
+            <textarea name="description" form="editDVD" title="New Description"></textarea>
+            <br>
+            <input type="reset">
+            <input name="submitEditDvd" type="submit" value="Edit DVD">
+        </form>
+    </div>
+    <?php
+}
+
 
 /**
  * @param $dvdArray dvd
@@ -95,7 +175,7 @@ function dvdTableRow($dvdArray)
          </tr>";
 }
 
-/**
+/** echos </table>
  *
  */
 function dvdTableEnd(){

@@ -63,6 +63,27 @@ function validSAID($id){
 }
 
 
+/** echos a table row, generating an html5 input with the given parameters
+ * @param $name
+ * @param $value
+ * @param string $placeholder
+ * @param string $required
+ * @param string $type
+ */
+function tableRowEditTD($name, $value, $placeholder = "", $required = "true", $type = "text"){
+    echo "<td> 
+            <input name='" . $name . "' value='" . htmlspecialchars($value) . "' placeholder='" . htmlspecialchars($placeholder) . "' type='" . $type . "' " . $required . ">
+          </td>";
+}
+
+/** Generates a table row with the given value
+ * @param $value
+ */
+function tableRowTD($value){
+    echo "<td>" . htmlspecialchars($value) . "</td>";
+}
+
+
 /** Binary Search through array using given value
  * @param $needle string
  * @param $haystack array
