@@ -72,7 +72,7 @@ function getCustomer($Where)
 //}
 
 /** Either updates or creates a new customer based on the given customer array.
- * @param $customer
+ * @param $customer customer
  * @param bool $isNew default is false;
  */
 function updateCustomer($customer, $isNew = false)
@@ -103,7 +103,7 @@ function deleteCustomer($id)
 
 
 /** Function is for a row of customers.
- * @param $customerArray an array of the customer class/
+ * @param $customerArray customer an array of the customer class/
  */
 function customerTableRow($customerArray)
 {
@@ -121,8 +121,8 @@ function customerTableRow($customerArray)
          </tr>";
 }
 
-/** Generates an ediable row of customers.
- * @param $customerArray
+/** Generates an editable row of customers.
+ * @param $customerArray customer
  */
 function customerTableRowEdit($customerArray)
 {
