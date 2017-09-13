@@ -5,9 +5,23 @@ table{
 
 .dvdEditForm{
     width: 100vw;
-    /*margin-left: 40%;*/
 }
 
 .body{
     overflow-x: hidden;
+}
+
+.login-section {
+    margin: auto;
+    align-content: center;
+}
+
+#login {
+    align-content: center;
+    text-align: center;
+    margin: auto;
+}
+
+.login-table {
+    max-width: 25rem;
 }

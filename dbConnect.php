@@ -53,6 +53,17 @@ class dbConnect
         return $result;
     }
 
+
+    public function customerLogin($username, $password)
+    {
+        try {
+            $result = mysqli_fetch_assoc($this->conn->query("SELECT password FROM customer WHERE id = " . intval($username)));
+            return $result['password'];
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * @param $table
      * @param $set customer array of customer
@@ -69,12 +80,12 @@ class dbConnect
         $sa_id_number = $set->getSaIdNumber();
         $address = $set->getAddress();
 
-        $setQuery = "id = " . $id . ", name = " . $name . ", surname = " . $surname
-            . ", contact_number = " . $contact_number . ", email = " . $email . " sa_id_number = " . $sa_id_number
-            . ", address = " . $address;
+        $setQuery = "`id` = " . $id . ", `name` = '" . addslashes($name) . "', `surname` = '" . addslashes($surname)
+            . "', `contact_number` = '" . $contact_number . "', `email` = '" . addslashes($email) . "', `sa_id_number` = " . $sa_id_number
+            . ", `address` = '" . addslashes($address) . "' ";
 
 
-        $query = "UPDATE " . $table . "SET " . $setQuery . " WHERE" . $where;
+        $query = "UPDATE " . $table . " SET " . $setQuery . " WHERE " . $where;
 
         return $this->conn->query($query);
     }
@@ -92,9 +103,10 @@ class dbConnect
         $sa_id_number = $set->getSaIdNumber();
         $address = $set->getAddress();
 
-        $values = "'" . $name . "', '". $surname . "', '" . $contact_number . "', '" . $email . "', '" . $sa_id_number . "', '" . $address . "'";
+        $values = "'" . addslashes($name) . "', '" . addslashes($surname) . "', '" . $contact_number . "', '"
+            . addslashes($email) . "', '" . $sa_id_number . "', '" . addslashes($address) . "'";
 
-        $columnNames = "name, surname, contact_number, email, sa_id_number, address";
+        $columnNames = "`name`, `surname`, `contact_number`, `email`, `sa_id_number`, `address`";
         $query = "INSERT INTO " . $table . " (" . $columnNames .") VALUES (" . $values . ");";
 
         return $this->conn->query($query);
@@ -108,15 +120,13 @@ class dbConnect
      */
     public function updateDvd($table, $set, $where)
     {
-        echo htmlentities("'", ENT_QUOTES, 'UTF-8');
-        $setQuery = "id = " . $set->getId() . ", name = '" . htmlentities($set->getName(),ENT_QUOTES, 'UTF-8'). "', description = '" . htmlentities($set->getDescription(), ENT_QUOTES, 'UTF-8')
-            . "', release = STR_TO_DATE('1998-09-02', '%Y-%m-%d'), category_id = " . $set->getCategoryId();
-        echo "<pre>IN DB"; var_dump($setQuery, $table, $where);
+        $setQuery = "`id` = " . $set->getId() . ", `name` = \"" . addslashes($set->getName()) . "\", 
+        `description` = '" . addslashes($set->getDescription()) . "', `release_date` = '" . $set->getReleaseDate()
+            . "', `category_id` = " . $set->getCategoryId();
 
         $query = "UPDATE " . $table . " SET " . $setQuery . " WHERE " . $where;
-        var_dump($query);
 
-        var_dump($this->conn->query($query), $this->conn);
+        return $this->conn->query($query);
     }
 
     /**
@@ -126,9 +136,9 @@ class dbConnect
      */
     public function insertDvd($table, $set)
     {
-        $values = "'" . $set->getName() . "', '". $set->getDescription() . "', '" . $set->getReleaseDate() . "', '" . $set->getCategoryId() . "'";
+        $values = "'" . addslashes($set->getName()) . "', '" . addslashes($set->getDescription()) . "', '" . $set->getReleaseDate() . "', '" . $set->getCategoryId() . "'";
 
-        $columnNames = "name, surname, contact_number, email, sa_id_number, address";
+        $columnNames = "`name`, `description`, `release_date`, `category_id`";
         $query = "INSERT INTO " . $table . " (" . $columnNames .") VALUES (" . $values . ");";
 
         return $this->conn->query($query);
@@ -143,4 +153,5 @@ class dbConnect
     {
         return $this->conn->query("DELETE FROM " . $table . " WHERE " . $where);
     }
+
 }

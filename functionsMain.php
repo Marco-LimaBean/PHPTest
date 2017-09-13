@@ -98,27 +98,6 @@ function addScript($scriptName, $defer = '', $type = "text/javascript"){
     <?php
 }
 
-
-///** Binary Search through array using given value
-// * @param $needle string
-// * @param $haystack array
-// * @param $element string
-// * @return bool|int
-// */
-//function binary_search1D($needle, $haystack, $element) {
-//    $min = 0;
-//    $max = count($haystack);
-//    while ($max >= $min)
-//    {
-//        $mid = (int) (($min + $max) / 2);
-//        if ($haystack[$mid][$element] == $needle) return $mid;
-//        else if ($haystack[$mid][$element] < $needle) $min = $mid + 1;
-//        else $max = $mid - 1;
-//    }
-//    // $needle was not found
-//    return false;
-//}
-
 /** json_encodes a string/object in a <script type='text/javascript'> echo using given variable name.
  * @param $variable string|array
  * @param $object string|array

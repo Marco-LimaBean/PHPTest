@@ -47,9 +47,29 @@ function getCustomer($where = [], $condition = ' AND ')
     return $customer;
 }
 
+/** Function for login check. Note to save their ID to SESSION['loggedIn']
+ * @param $username string
+ * @param $password string DO NOT UN HASH THIS. THE FUNCTION DOES IT FOR YOU
+ * @return bool
+ */
+function login($username, $password, $customer = true)
+{
+    if (!isset($dbConnect)) {
+        if (!class_exists("dbConnect")) include('dbConnect.php');
+        $dbConnect = new dbConnect();
+    }
+
+    if ($customer) {
+        $hash = $dbConnect->customerLogin($username, $password);
+        return password_verify($password, $hash);
+    }
+    return false;
+}
+
 /** Either updates or creates a new customer based on the given customer array.
  * @param $customer customer
  * @param bool $isNew default is false;
+ * @return bool|mysqli_result
  */
 function updateCustomer($customer, $isNew = false)
 {
@@ -58,8 +78,11 @@ function updateCustomer($customer, $isNew = false)
         $dbConnect = new dbConnect();
     }
 
-    if($isNew) $dbConnect->insertCustomer("customer", $customer);
-    else $dbConnect->updateDvd("customer", $customer, "id = " . $customer->getId());
+    if ($isNew) {
+        return $dbConnect->insertCustomer("customer", $customer);
+    } else {
+        return $dbConnect->updateCustomer("customer", $customer, "id = " . $customer->getId());
+    }
 }
 
 /** Deletes a customer with the given ID.

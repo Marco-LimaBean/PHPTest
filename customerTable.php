@@ -41,7 +41,10 @@ $_SESSION['customer'] = getCustomer("1=1");
         </tr>
         <?php
 
+        $_SESSION['customerIDList'] = array();
+
         foreach ($_SESSION['customer'] as $key => $value) {
+            array_push($_SESSION['customerIDList'], $key);
                 if(isset($_GET['id'])) {
                     //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
                     $_SESSION['userEditing'] = $_GET['id'];
@@ -61,34 +64,6 @@ $_SESSION['customer'] = getCustomer("1=1");
             customerTableRowEdit(new Customer());
         }
 
-
-//        $sql = $conn->query("SELECT * FROM customer;");
-//
-//
-//        while ($row = mysqli_fetch_assoc($sql)) {
-//
-//
-//
-//            if(isset($_GET['id'])) {
-//                //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
-//                $_SESSION['userEditing'] = $_GET['id'];
-//            }
-//
-//            if (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $row['id']) {
-//                $_SESSION['userEditing'] = $row['id'];
-//                customerTableRowEdit($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
-//            } else {
-//                customerTableRow($row['id'], $row['name'], $row['surname'], $row['contact_number'], $row['email'], $row['sa_id_number'], $row['address']);
-//            }
-//        }
-//
-//        if (isset($_POST['addCustomer'])) {
-//            unset($_SESSION['userEditing'], $_GET['id'], $_POST['addCustomer']);
-//            $addCustID = getHighestCustID() + 1;
-//            customerTableRowEdit($addCustID);
-//        }
-
-
         ?>
     </table>
     <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
@@ -101,14 +76,10 @@ if(isset($_GET['id'], $_GET['delete']) || isset($_SESSION['userEditing'], $_POST
     $deleteID = (isset($_GET['id']) ? $_GET['id'] : $_SESSION['userEditing']);
     $delete = (isset($_GET['delete']) ? $_GET['delete'] : $_POST['deleteCustomer']);
     if(is_numeric($deleteID) && $delete === "TRUE"){
-        echo "checks passed";
-        echo $delete;
-
         $message = NULL;
 
         if(deleteCustomer($_GET['id'])){
             $message = "Customer has been deleted";
-
         }else{
             $message = "There was an error deleting the customer.";
         }
@@ -119,16 +90,15 @@ if(isset($_GET['id'], $_GET['delete']) || isset($_SESSION['userEditing'], $_POST
     }else{
         echo "An error occurred, please use a website GUI";
     }
-
 }
-
 
 //if the save button is clicked to update the customer
 if (isset($_POST['updateCustomer'])) {
     //check if the user submitted all variables (nothing empty)
+    echo "<br>1. update customer clicked";
     if (isset($_POST['id'], $_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email']
         , $_POST['sa_id_number'], $_POST['address'])) {
-
+        echo "<br>2. isset checks passed ";
         do {
             /*
              * SCRUBBING USER DATA
@@ -140,6 +110,7 @@ if (isset($_POST['updateCustomer'])) {
                 //not a valid e-mail, fall back to the alert
                 break;
             }
+            echo "<br>3. passed email check ";
 
             //check if the sa_id_number is valid
             $invalidError = "Please enter a valid South African ID Number";
@@ -148,6 +119,8 @@ if (isset($_POST['updateCustomer'])) {
                 break;
             }
 
+            echo "<br>3. passed valid ID check ";
+
             //set control variable to null for invalid data catch to not trigger
             $invalidError = NULL;
 
@@ -155,23 +128,22 @@ if (isset($_POST['updateCustomer'])) {
              * END OF SCRUBBING USER DATA
              */
 
-            if ($_POST['updateCustomer'] == "Save") {
-                updateCustomer(in_array($_SESSION['userEditing'], $_SESSION['customer']->getId()));
-//
-//                updateCustomer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
-//                    $_POST['sa_id_number'], $_POST['address'], $_POST['id']);
-//                //reset the session variable.
-                unset($_SESSION['userEditing']);
-            } else {
-                updateCustomer(new Customer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
-                    $_POST['sa_id_number'], $_POST['address']), true);
-                echo "Else update customer called";
-                //reset the session variable.
+            $updateCustomer = new Customer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
+                $_POST['sa_id_number'], $_POST['address'], $_SESSION['userEditing']);
+
+            echo "<pre>";
+            var_dump($updateCustomer);
+
+            $customerIdList = array();
+
+            if ($_POST['updateCustomer'] == "save") {
+                if (!updateCustomer($updateCustomer, !in_array($_SESSION['userEditing'], $_SESSION['customerIDList']))) {
+                    //if it failed to update the customer.
+                    echo "Failed to update customer";
+                    sleep(5);
+                }
                 unset($_SESSION['userEditing']);
             }
-
-//            //can't use header as header information has already been sent... maybe output buffering?
-//            header("Refresh: 0");
             refresh();
 
         } while (false);
@@ -184,6 +156,4 @@ if (isset($_POST['updateCustomer'])) {
     } else {
         jsAlert("Please enter valid details or use the website.");
     }
-
-    //check if all user-submitted variables are valid
 }

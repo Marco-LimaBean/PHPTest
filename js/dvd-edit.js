@@ -64,16 +64,4 @@ $(document).ready(function () {
             }
         });
     });
-
-
-    //
-    // $.ajax({
-    //     type: "POST",
-    //     url: 'dvdEdit',
-    //     data: data,
-    //     success: success,
-    //     dataType: dataType
-    // });
-
-    alert('JQuery Executed');
 });

@@ -15,18 +15,14 @@ if(!isset($dbConnect)){
 }
 
 if(isset($_POST['dvd'])){
-    echo "<h4>checks passed</h4>";
+
 
     $dvd = dvdConvertFromJSON($_POST['dvd']);
     if(get_class($dvd) == "dvd"){
         updateDvd($dvd);
-        echo "Update occurred. <br>";
-        echo "new DVD List:<br>";
-        echo "<pre>";
-        var_dump(getDvd());
-        echo "<br> Given DVD:";
-        var_dump($dvd);
-        echo "</pre>";
+        echo "<h4>Your movie has been updated.</h4>";
+    } else {
+        echo "<h4>An error has occurred, please try again (CODE 1002).</h4>";
     }
 
 }else{

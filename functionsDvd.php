@@ -51,7 +51,7 @@ function getCategories(){
     $dbConnect = new dbConnect();
     $category = array();
     $results = $dbConnect->fetch("
-        SELECT id, category_name
+        SELECT `id`, `category_name`
         FROM category");
     foreach ($results as $key => $value){
         array_push($category, new category($value['id'], $value['category_name']));
@@ -78,10 +78,10 @@ function searchDvd($dvdList, $dvdID){
  * @return array|int
  */
 function customerOrderAddDvd($customerOrder, $dvd){
-    var_dump($dvd);
+//    var_dump($dvd);
     if(!empty($customerOrder )){
         foreach ($customerOrder as $value){
-            print_r($value);
+//            print_r($value);
             if($value->getId() == $dvd->getId()){
                 $value->increaseCount(1);
                 return $customerOrder;

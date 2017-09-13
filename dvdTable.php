@@ -30,9 +30,7 @@ if(isset($_GET['id'], $_GET['add'])){
     $dvd = searchDvd($dvdList, $_GET['id']);
 //    echo "<br> 2nd SearchDVD: " . var_dump($dvd) . "<br>";
     if($dvd){ //add dvd if the dvd id is valid.
-        echo "<pre>";
         $customerOrder = customerOrderAddDvd($customerOrder, $dvd);
-        var_dump($customerOrder);
     }else{
         echo "invalid DVD ID specified";
     }
