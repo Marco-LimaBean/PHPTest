@@ -59,7 +59,7 @@ class dbConnect
      * @param $where
      * @return bool|mysqli_result
      */
-    public function update($table, $set, $where)
+    public function updateCustomer($table, $set, $where)
     {
         $id = $set->getId();
         $name = $set->getName();
@@ -70,7 +70,7 @@ class dbConnect
         $address = $set->getAddress();
 
         $setQuery = "id = " . $id . ", name = " . $name . ", surname = " . $surname
-            . ", contact_number = " . $contact_number . ", email: " . $email . " sa_id_number = " . $sa_id_number
+            . ", contact_number = " . $contact_number . ", email = " . $email . " sa_id_number = " . $sa_id_number
             . ", address = " . $address;
 
 
@@ -84,7 +84,7 @@ class dbConnect
      * @param $set customer
      * @return bool|mysqli_result
      */
-    public function insert($table, $set){
+    public function insertCustomer($table, $set){
         $name = $set->getName();
         $surname = $set->getSurname();
         $contact_number = $set->getContactNumber();
@@ -94,7 +94,40 @@ class dbConnect
 
         $values = "'" . $name . "', '". $surname . "', '" . $contact_number . "', '" . $email . "', '" . $sa_id_number . "', '" . $address . "'";
 
-        $i = 1; //counter for columnNames.
+        $columnNames = "name, surname, contact_number, email, sa_id_number, address";
+        $query = "INSERT INTO " . $table . " (" . $columnNames .") VALUES (" . $values . ");";
+
+        return $this->conn->query($query);
+    }
+
+    /**
+     * @param $table
+     * @param $set dvd array of dvd
+     * @param $where
+     * @return bool|mysqli_result
+     */
+    public function updateDvd($table, $set, $where)
+    {
+        echo htmlentities("'", ENT_QUOTES, 'UTF-8');
+        $setQuery = "id = " . $set->getId() . ", name = '" . htmlentities($set->getName(),ENT_QUOTES, 'UTF-8'). "', description = '" . htmlentities($set->getDescription(), ENT_QUOTES, 'UTF-8')
+            . "', release = STR_TO_DATE('1998-09-02', '%Y-%m-%d'), category_id = " . $set->getCategoryId();
+        echo "<pre>IN DB"; var_dump($setQuery, $table, $where);
+
+        $query = "UPDATE " . $table . " SET " . $setQuery . " WHERE " . $where;
+        var_dump($query);
+
+        var_dump($this->conn->query($query), $this->conn);
+    }
+
+    /**
+     * @param $table
+     * @param $set dvd
+     * @return bool|mysqli_result
+     */
+    public function insertDvd($table, $set)
+    {
+        $values = "'" . $set->getName() . "', '". $set->getDescription() . "', '" . $set->getReleaseDate() . "', '" . $set->getCategoryId() . "'";
+
         $columnNames = "name, surname, contact_number, email, sa_id_number, address";
         $query = "INSERT INTO " . $table . " (" . $columnNames .") VALUES (" . $values . ");";
 
@@ -110,5 +143,4 @@ class dbConnect
     {
         return $this->conn->query("DELETE FROM " . $table . " WHERE " . $where);
     }
-
 }

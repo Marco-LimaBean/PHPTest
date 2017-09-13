@@ -18,25 +18,17 @@ $categoryList = getCategories();
 
 dvdEditForm($dvdList, $categoryList);
 
-if(isset($_POST['submitEditDvd'], $_POST['dvd'])){
+//if(isset($_POST['submitEditDvd'], $_POST['dvd'], $_POST['dvd'], $_POST['dvd'])){
     //need to check each form item individually as only those with a value entered are the ones to change.
-
-    $changeArray = array();
-
-    if(isset($_POST['newName']) && is_string($_POST['newName'])){
-//        array_merge($changeArray, array('newName' => $_POST['newName']));
-        echo "<pre>";
-        var_dump(dvdChangeArray($changeArray, $_POST, 'newName'));
-        echo "</pre>";
-    }
-}
+//
+//    $changeArray = array();
+//
+//    if(isset($_POST['newName']) && is_string($_POST['newName'])){
+//        var_dump(dvdChangeArray($changeArray, $_POST, 'newName'));
+//    }
+//}
 
 //JQUERY
-//pass objects
-json_encode($dvdList);
-json_encode($categoryList);
-
-
 addScript("/js/dvd-edit.js");
 
 include_once ("html/defaultFooter.html");

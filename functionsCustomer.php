@@ -58,8 +58,8 @@ function updateCustomer($customer, $isNew = false)
         $dbConnect = new dbConnect();
     }
 
-    if($isNew) $dbConnect->insert("customer", $customer);
-    else $dbConnect->update("customer", $customer, "id = " . $customer->getId());
+    if($isNew) $dbConnect->insertCustomer("customer", $customer);
+    else $dbConnect->updateDvd("customer", $customer, "id = " . $customer->getId());
 }
 
 /** Deletes a customer with the given ID.

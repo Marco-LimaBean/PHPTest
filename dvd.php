@@ -6,7 +6,7 @@
  * Time: 7:27 AM
  */
 
-class dvd
+class dvd implements JsonSerializable
 {
     private $id, $name, $description, $releaseDate, $category_id, $category_name, $count;
 
@@ -20,7 +20,7 @@ class dvd
      * @param $category_name
      * @param int $count total number of DVD or how many DVD to add to the list
      */
-    public function __construct($id, $name, $description, $releaseDate, $category_id, $category_name, $count = 0)
+    public function __construct($id, $name, $description, $releaseDate, $category_id, $category_name = false, $count = 0)
     {
         $this->id = $id;
         $this->name = $name;
@@ -147,4 +147,33 @@ class dvd
         $this->count += $count;
     }
 
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        //$id, $name, $description, $releaseDate, $category_id, $category_name, $count;
+        return array(
+            'id' => intval($this->id),
+            'name' => $this->name,
+            'description' => $this->description,
+            'release_date' => $this->releaseDate,
+            'category_id' => intval($this->category_id),
+            'category_name' => $this->category_name,
+            'count' => intval($this->count)
+        );
+    }
+
+    public function toString()
+    {
+
+        return 'id: ' . intval($this->getId()). ' name: '. $this->name . ' description: ' . $this->description .
+            ' release_date: ' . $this->releaseDate . ' category_id: ' . intval($this->category_id) .
+            ' category_name: ' . $this->category_name .  ' count: ' . intval($this->count). ";";
+
+    }
 }

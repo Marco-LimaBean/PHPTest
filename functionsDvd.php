@@ -31,6 +31,19 @@ function getDvd()
     return $dvd;
 }
 
+/** This function will either update or add a new DVD.
+ * @param $dvd dvd
+ * @param bool $isNew
+ * @return bool
+ */
+function updateDvd($dvd, $isNew = false){
+    if (!class_exists("dbConnect")) require("dbConnect.php");
+    if (!class_exists("dvd")) require("dvd.php");
+    $dbConnect = new dbConnect();
+    if($isNew) $dbConnect->insertDvd("dvd", $dvd);
+    else $dbConnect->updateDvd("dvd", $dvd, "id = " . $dvd->getId());
+}
+
 /**
  * @return category[]
  */
@@ -77,6 +90,15 @@ function customerOrderAddDvd($customerOrder, $dvd){
     }
     array_push($customerOrder, $dvd);
     return $customerOrder;
+}
+
+/**
+ * @param $dvd
+ * @return dvd
+ */
+function dvdConvertFromJSON($dvd){
+    $dvd = json_decode($dvd, true);
+    return new dvd($dvd['id'], $dvd['name'], $dvd['description'], $dvd['release_date'], $dvd['category_id'], $dvd['category_name']);
 }
 
 /** Echos <table> table headers.
@@ -150,11 +172,12 @@ function dvdEditForm($dvdList, $category){
             <br>
             <label>New Description: </label>
             <br>
-            <textarea name="description" form="editDVD" title="New Description"></textarea>
+            <textarea name="description" form="editDVD" title="New Description" cols="60"></textarea>
             <br>
-            <input type="reset">
+            <input name="reset" type="reset">
             <input name="submitEditDvd" type="submit" value="Edit DVD">
         </form>
+        <div id="message"></div>
     </div>
     <?php
 }
