@@ -50,6 +50,7 @@ function getCustomer($where = [], $condition = ' AND ')
 /** Function for login check. Note to save their ID to SESSION['loggedIn']
  * @param $username string
  * @param $password string DO NOT UN HASH THIS. THE FUNCTION DOES IT FOR YOU
+ * @param bool $customer to help if one wishes to avoid the checks/site admin tests.
  * @return bool
  */
 function login($username, $password, $customer = true)

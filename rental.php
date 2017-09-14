@@ -10,7 +10,7 @@ $title = "Rental";
 include_once('html/defaultHeader.html');
 if (!isset($_SESSION)) session_start();
 
-if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === TRUE) {
+if (isset($_SESSION['loggedIn']) && is_numeric($_SESSION['loggedIn'])) {
     include_once('customerRental.php');
 } else {
     include_once('login.php');

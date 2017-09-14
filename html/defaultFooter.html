@@ -1,9 +1,12 @@
-<dvi class="text-center navbar-fixed-bottom">
-    <br>You have reached the end of the age.
-</dvi>
+<br>
+<br>
+<br>
+<br>
+<footer class="text-center navbar-fixed-bottom">
+    <br>PHPTest 2017
+</footer>
 
 <!-- scripts -->
-
 <script src="../js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -11,7 +14,12 @@
         // get current URL path and assign 'active' class
         var pathname = window.location.pathname;
         $('.nav > li > a[href="' + pathname + '"]').parent().addClass('active');
-    })
+
+        //disable a user clicking on a class="disabled" link
+        $(".nav li.disabled a").click(function () {
+            return false;
+        });
+    });
 </script>
 <!-- /scripts -->
 </body>

@@ -131,11 +131,6 @@ if (isset($_POST['updateCustomer'])) {
             $updateCustomer = new Customer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
                 $_POST['sa_id_number'], $_POST['address'], $_SESSION['userEditing']);
 
-            echo "<pre>";
-            var_dump($updateCustomer);
-
-            $customerIdList = array();
-
             if ($_POST['updateCustomer'] == "save") {
                 if (!updateCustomer($updateCustomer, !in_array($_SESSION['userEditing'], $_SESSION['customerIDList']))) {
                     //if it failed to update the customer.

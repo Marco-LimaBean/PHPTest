@@ -78,10 +78,8 @@ function searchDvd($dvdList, $dvdID){
  * @return array|int
  */
 function customerOrderAddDvd($customerOrder, $dvd){
-//    var_dump($dvd);
     if(!empty($customerOrder )){
         foreach ($customerOrder as $value){
-//            print_r($value);
             if($value->getId() == $dvd->getId()){
                 $value->increaseCount(1);
                 return $customerOrder;
@@ -89,6 +87,29 @@ function customerOrderAddDvd($customerOrder, $dvd){
         }
     }
     array_push($customerOrder, $dvd);
+    return $customerOrder;
+}
+
+/**
+ * @param $customerOrder array
+ * @param $dvd dvd
+ * @return array|int
+ */
+function customerOrderRemoveDvd($customerOrder, $dvd)
+{
+    if (!empty($customerOrder)) {
+        $index = NULL;
+        foreach ($customerOrder as $key => $value) {
+            if ($value->getId() === $dvd->getId()) {
+                $index = $key;
+                break;
+            }
+        }
+        if ($index !== NULL) {
+            array_splice($customerOrder, $index, 1);
+        }
+
+    }
     return $customerOrder;
 }
 
@@ -185,6 +206,30 @@ function dvdEditForm($dvdList, $category){
 
 /**
  * @param $dvdArray dvd
+ * @param bool $inOrder is the value in the customer order
+ */
+function customerDvdRentalRow($dvdArray, $inOrder = false)
+{
+    echo "<tr>
+            <td>" . htmlspecialchars($dvdArray->getId()) . "</td>" . "
+            <td>" . htmlspecialchars($dvdArray->getName()) . "</td>" . "
+            <td>" . htmlspecialchars($dvdArray->getDescription()) . "</td>" . "
+            <td>" . htmlspecialchars($dvdArray->getReleaseDate()) . "</td>" . "
+            <td>" . htmlspecialchars($dvdArray->getCategoryName()) . "</td>";
+    if (!$inOrder) {
+        echo "<td> 
+                <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&add=TRUE'>Add</a> 
+              </td>";
+    } else {
+        echo "<td>
+                <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&remove=TRUE'>Remove</a>
+             </td>";
+    }
+    echo "</tr>";
+}
+
+/**
+ * @param $dvdArray dvd
  */
 function dvdTableRow($dvdArray)
 {
@@ -194,8 +239,8 @@ function dvdTableRow($dvdArray)
             <td>" . htmlspecialchars($dvdArray->getDescription()) . "</td>" . "
             <td>" . htmlspecialchars($dvdArray->getReleaseDate()) . "</td>" . "
             <td>" . htmlspecialchars($dvdArray->getCategoryName()) . "</td>" . "
-            <td> <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&add=TRUE'>Add</a> 
-                <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&remove=TRUE'>Remove</a>
+            <td> <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&edit=TRUE'>Add</a> 
+                <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&remove=TRUE'>Delete</a>
             </td>" . "
          </tr>";
 }

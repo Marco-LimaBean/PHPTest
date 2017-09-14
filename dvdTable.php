@@ -18,25 +18,6 @@ if(!isset($dvdList)){
     $dvdList = getDvd();
 }
 
-//get customer list
-if(!isset($customerOrder) || $customerOrder == NULL){
-    if(isset($_SESSION['sCustomerOder'])) $customerOrder = unserialize($_SESSION['sCustomerOder']);
-    else $customerOrder = array(); //in case there is no customerOrder list.
-}
-
-//if customer requests to add DVD to list:
-if(isset($_GET['id'], $_GET['add'])){
-//    echo "<br> SearchDVD: " . var_dump(searchDvd($dvdList, $_GET['id'])) . "<br>";
-    $dvd = searchDvd($dvdList, $_GET['id']);
-//    echo "<br> 2nd SearchDVD: " . var_dump($dvd) . "<br>";
-    if($dvd){ //add dvd if the dvd id is valid.
-        $customerOrder = customerOrderAddDvd($customerOrder, $dvd);
-    }else{
-        echo "invalid DVD ID specified";
-    }
-}
-
-
 
 //printing out of table
 dvdTableStart();
@@ -49,6 +30,3 @@ foreach ($dvdList as $key => $value){
 //printing out of end of table
 dvdTableEnd();
 
-
-//Seialization
-$_SESSION['sCustomerOder'] = serialize($customerOrder);
