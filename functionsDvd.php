@@ -10,7 +10,7 @@ if (!class_exists("dbConnect")) include("dbConnect.php");
 if (!class_exists("category")) include("category.php");
 include_once ("functionsMain.php");
 
-/**
+/** Returns all DVD's in the database
  * @return array
  */
 function getDvd()
@@ -28,6 +28,7 @@ function getDvd()
     var_dump($resultsDvds);
 
 
+    //convert results to array of dvd objects
     foreach ($resultsDvds as $key => $resultDvd) {
         array_push($dvd, new dvd($resultDvd['id'], $resultDvd['name'], $resultDvd['description'],
             $resultDvd['release_date'], $resultDvd['category_id'], $resultDvd['category_name']));
