@@ -152,7 +152,7 @@ ALTER TABLE `dvd`
 --
 -- Indexes for table `dvd_order`
 --
-ALTER TABLE `dvd_order`
+ALTER TABLE dvd_order_line
   ADD KEY `dvd_id` (`dvd_id`),
   ADD KEY `order_id` (`order_id`);
 
@@ -200,7 +200,7 @@ ALTER TABLE `dvd`
 --
 -- Constraints for table `dvd_order`
 --
-ALTER TABLE `dvd_order`
+ALTER TABLE dvd_order_line
   ADD CONSTRAINT `dvd_order_ibfk_1` FOREIGN KEY (`dvd_id`) REFERENCES `dvd` (`id`),
   ADD CONSTRAINT `dvd_order_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `order_line` (`id`);
 

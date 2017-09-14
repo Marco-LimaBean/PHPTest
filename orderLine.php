@@ -11,13 +11,11 @@ class orderLine
     private $order_id, $customer_id, $rent_date, $due_date, $actual_return_date;
 
     /**
-     * orderLine constructor.
      * @param $customer_id
      * @param $rent_date
      * @param $due_date
      * @param string $actual_return_date
-     * @param bool $order_id
-     * @param $order_id
+     * @param bool|int $order_id
      */
     public function __construct($customer_id, $rent_date, $due_date, $actual_return_date = 'NULL', $order_id = false)
     {
@@ -111,7 +109,7 @@ class orderLine
 
 class orderLineItem extends orderLine
 {
-    private $dvdShort;
+    private $dvdShortArray;
 
     /**
      * orderLineItem constructor.
@@ -124,24 +122,24 @@ class orderLineItem extends orderLine
      */
     public function __construct($order_id, $customer_id, $rent_date, $due_date, $actual_return_date = 'NULL', array $dvdShort)
     {
-        parent::__construct($customer_id, $rent_date, $due_date, $actual_return_date = 'NULL', $id = false);
+        parent::__construct($customer_id, $rent_date, $due_date, $actual_return_date = 'NULL', $order_id);
         if (!class_exists("dvdShort")) include("dvd.php");
-        $this->dvdShort = $dvdShort;
+        $this->dvdShortArray = $dvdShort;
     }
 
     /**
      * @return dvdShort
      */
-    public function getDvdShort()
+    public function getDvdShortArray()
     {
-        return $this->dvdShort;
+        return $this->dvdShortArray;
     }
 
     /**
-     * @param dvdShort $dvdShort
+     * @param dvdShort $dvdShortArray
      */
-    public function setDvdShort($dvdShort)
+    public function setDvdShortArray($dvdShortArray)
     {
-        $this->dvdShort = $dvdShort;
+        $this->dvdShortArray = $dvdShortArray;
     }
 }

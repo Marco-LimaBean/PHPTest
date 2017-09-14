@@ -1,6 +1,6 @@
 <?php
 
-/** Gets outstanding order items. Note that each will be gotten as an object
+/** Gets outstanding order items. It will return it all as an array of orderLineItem object(s) or false if none are found.
  * @param $customerId
  * @return array|bool
  */
@@ -14,35 +14,65 @@ function getOutstanding($customerId)
         $dbConnect = new dbConnect();
     }
 
-    $results = $dbConnect->fetch("SELECT  order_line.id, order_line.customer_id, order_line.rent_date, 
-                                        order_line.due_date, order_line.actual_return_date, dvd_order.dvd_id, dvd.name
-                                    FROM order_line 
-                                    INNER JOIN dvd_order ON dvd_order.order_id = order_line.id 
-                                    INNER JOIN dvd ON dvd.id = dvd_order.dvd_id",
-        "order_line.customer_id = $customerId", "order_line.actual_return_date IS NULL");
+    $resultsOutstandingItems = $dbConnect->fetch("SELECT  `order`.id, `order`.customer_id, `order`.`rent_date`, 
+                                        `order`.`due_date`, `order`.`actual_return_date`, dvd_order_line.`dvd_id`, `dvd`.`name`
+                                    FROM `order` 
+                                    INNER JOIN dvd_order_line ON dvd_order_line.`order_id` = `order`.`id` 
+                                    INNER JOIN `dvd` ON `dvd`.`id` = dvd_order_line.`dvd_id`",
+        "order.customer_id = $customerId", "order.actual_return_date IS NULL");
 
-    echo "<pre>";
 
-    if (!empty($results)) {//if there are results
-        //convert to array.
-        $outstandingItem = array();
-        foreach ($results as $value) {
+    if (!empty($resultsOutstandingItems)) {//if there are results
+        //convert to array of orderLine. Due to results being individual for every dvd, it needs to be merged for one order line.
 
-            foreach ($outstandingItem as $key => $iValue) {
-                echo $key . " " . $value['id'] . " " . $iValue->getOrderId();
-                if ($value['id'] === $iValue->getOrderId()) {
-                    echo "Value: " . $iValue['id'] . " found in array";
-                    $outstandingItem[$key]->setDvdShort(array_merge($outstandingItem[$key]->getDvdShort(),
-                        array(new dvdShort($value['dvd_id'], $value['name']))));
+        $outstandingOrderLine = array(); //store all orderLine items
+
+        //foreach loop to go through every item
+        foreach ($resultsOutstandingItems as $outstandingItem) {
+
+            $found = false; //to check if the orderLine item with the corresponding orderId has already been found.
+
+            //search through previous outstandingOrderLine items for matches.
+            foreach ($outstandingOrderLine as $key => $orderLine) {
+                if ($outstandingItem['id'] === $orderLine->getOrderId()) {
+                    //if an outstanding orderLineItem belonging to an order that already exists has been found:
+                    //get the previous DVD Short (name, id) array and add the new DVD Short to it.
+                    $outstandingOrderLine[$key]->setDvdShortArray(
+                        array_merge(
+                            $outstandingOrderLine[$key]->getDvdShortArray(),
+                            [new dvdShort($outstandingItem['dvd_id'], $outstandingItem['name'])]
+                        )
+                    );
+                    $found = true; //it has been found, break out of loop
                     break;
                 }
             }
-            array_push($outstandingItem, new orderLineItem($value['id'], $value['customer_id'], $value['rent_date'],
-                $value['due_date'], $value['actual_return_date'], array(new dvdShort($value['dvd_id'], $value['name']))));
+
+            if (!$found) { //if the orderLine item order_id has not been found, a new order item has to be added.
+                array_push(
+                    $outstandingOrderLine,
+                    new orderLineItem(
+                        $outstandingItem['id'],
+                        $outstandingItem['customer_id'],
+                        $outstandingItem['rent_date'],
+                        $outstandingItem['due_date'],
+                        $outstandingItem['actual_return_date'],
+                        [
+                            new dvdShort(
+                                $outstandingItem['dvd_id'],
+                                $outstandingItem['name']
+                            )
+                        ]
+                    )
+                );
+            }
+
         }
-        echo "</pre>";
-        return $outstandingItem;
+
+        //return all outstanding order line items.
+        return $outstandingOrderLine;
     } else {
+        //no results were found
         return false;
     }
 }

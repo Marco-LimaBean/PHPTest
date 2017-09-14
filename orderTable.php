@@ -17,9 +17,11 @@ include_once('functionsCustomer.php');
 include_once('functionsCart.php');
 include_once('functionsOrder.php');
 
-//$outstanding = getOutstanding($_SESSION['loggedIn']);
-$outstanding = getOutstanding(2);
-echo "<pre>";
-var_dump($outstanding);
-echo "</pre>";
+$outstanding = getOutstanding($_SESSION['loggedIn']);
+
+foreach ($outstanding as $orderLine) {
+
+}
+
+
 
