@@ -76,3 +76,115 @@ function getOutstanding($customerId)
         return false;
     }
 }
+
+
+/** Selects the highest order id associated with that customer.
+ * @param $customerId int
+ * @return int
+ */
+function getNewestCustomerOrderId($customerId)
+{
+    if (!class_exists("dbConnect")) require("dbConnect.php");
+    if (!class_exists("orderLine")) require("orderLine.php");
+
+    if (!isset($dbConnect)) {
+        if (!class_exists("dbConnect")) include('dbConnect.php');
+        $dbConnect = new dbConnect();
+    }
+
+    $where = ["`order`.`customer_id` = " . $customerId];
+    $resultMaxOrder = $dbConnect->fetch("SELECT max(`order`.`id`) FROM `order`", $where);
+    $resultMaxOrder = array_values($resultMaxOrder[0]); //can't seem to refer by id?
+    return $resultMaxOrder[0]; //return only the result id.
+}
+
+/** Top of the table rental return table
+ *
+ */
+function orderTableStart()
+{
+    ?>
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Rental Date</th>
+            <th>Due Date</th>
+            <th>Movies</th>
+            <th>Days Outstanding</th>
+            <th>&nbsp;</th> <!--actions-->
+        </tr>
+    <?php
+}
+
+/** Prints out a row for every outstanding item.
+ * It will display rented DVD's in its own column, displaying all DVD's associated with the order
+ *
+ * @param $outstandingItem orderLineItem
+ */
+function orderTableItem($outstandingItem)
+{
+
+    echo "<tr>
+                <td>" . htmlspecialchars($outstandingItem->getOrderId()) . "</td>
+                <td> " . htmlspecialchars($outstandingItem->getRentDate()) . "</td>
+                <td> " . htmlspecialchars($outstandingItem->getDueDate()) . "</td>
+                <td>" . orderTableItemDVDBullets($outstandingItem->getDvdShortArray()) . " </td>
+                <td>" . htmlspecialchars(getDaysOutstanding($outstandingItem->getDueDate())) . "</td>
+                <td> <a href='?orderId=" . htmlspecialchars($outstandingItem->getOrderId()) . "'>Return</a></td>
+            </tr>";
+
+}
+
+/** returns a string value of the given DVDShort array as a bullet list.
+ * @param $dvdList dvdShort
+ * @return string
+ */
+function orderTableItemDVDBullets($dvdList)
+{
+
+    $bulletList = "<ul>
+";
+
+    foreach ($dvdList as $dvdItem) {
+        $bulletList .= orderTableItemDVDListItem($dvdItem);
+    }
+
+    $bulletList .= "</ul>";
+    return $bulletList;
+}
+
+/** Returns the dvd item's name wrapped in <li> tags
+ * @param $dvd dvdShort
+ * @return string <li> dvd's name </li>
+ */
+function orderTableItemDVDListItem($dvd)
+{
+    return ("<li> " . htmlspecialchars($dvd->getName()) . " </li>
+");
+}
+
+/** Echoes the end of the order table
+ *
+ */
+function orderTableEnd()
+{
+    echo "</table>";
+}
+
+
+/** Returns either none - due in # days or # of days
+ * @param $date
+ * @return float
+ */
+function getDaysOutstanding($date)
+{
+    $dateDifference = getDayDifference($date);
+    if ($dateDifference > 0) {
+        return htmlspecialchars($dateDifference) . " days ago";
+    } else if ($dateDifference == 0) {
+        return "0 - Due Today";
+    } else { //isn't due
+        return "None - Due in " . htmlspecialchars($dateDifference * -1) . " days.";
+    }
+}
+

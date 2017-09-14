@@ -19,14 +19,23 @@ function getDvd()
     if (!class_exists("dvd")) require("dvd.php");
     $dbConnect = new dbConnect();
     $dvd = array();
-    $results = $dbConnect->fetch("
+    $resultsDvds = $dbConnect->fetch("
         SELECT dvd.id, dvd.name, dvd.description,dvd.release_date, dvd.category_id, category.category_name
         FROM dvd
         INNER JOIN category ON category.id = dvd.category_id;");
-    foreach ($results as $key => $value){
-        array_push($dvd, new dvd($value['id'], $value['name'], $value['description'],
-            $value['release_date'], $value['category_id'], $value['category_name']));
+
+    echo "RESULTS: <pre>";
+    var_dump($resultsDvds);
+
+
+    foreach ($resultsDvds as $key => $resultDvd) {
+        array_push($dvd, new dvd($resultDvd['id'], $resultDvd['name'], $resultDvd['description'],
+            $resultDvd['release_date'], $resultDvd['category_id'], $resultDvd['category_name']));
+        echo "DVD (" . $key . ") :";
+        var_dump($dvd);
     }
+
+    echo "</pre>";
 
     return $dvd;
 }

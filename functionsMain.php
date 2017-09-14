@@ -125,3 +125,19 @@ function jsonJSEcho($variable, $object){
 ";
 
 }
+
+/** Returns the number of days between the given date and system date.
+ *  Positive means that the date is in the future
+ *  Zero means that it is within 24 hours
+ *  Negative means that the date has passed
+ * @param $date
+ * @return float
+ */
+function getDayDifference($date)
+{
+    $now = time(); // or your date as well
+    $your_date = strtotime($date);
+    $datediff = $now - $your_date;
+
+    return floor($datediff / (60 * 60 * 24));
+}

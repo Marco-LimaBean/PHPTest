@@ -17,11 +17,29 @@ include_once('functionsCustomer.php');
 include_once('functionsCart.php');
 include_once('functionsOrder.php');
 
+//get outstanding orders (movies that haven't been returned) from the logged in user:
 $outstanding = getOutstanding($_SESSION['loggedIn']);
+/*
+ * Display
+ */
 
-foreach ($outstanding as $orderLine) {
+if ($outstanding) { //if there are outstanding items.
+    orderTableStart();
 
+    foreach ($outstanding as $orderLine) {
+
+        orderTableItem($orderLine);
+    }
+
+    orderTableEnd();
+} else {
+    //if there are no outstanding items
+
+    echo "<h3> You have no rentals to return. </h3>";
 }
 
 
+/*
+ * /DISPLAY
+ */
 

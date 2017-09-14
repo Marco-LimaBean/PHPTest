@@ -54,3 +54,20 @@ function updateOrderLine($orderLine)
         return $dbConnect->updateOrder("order_line", $orderLine, "id = " . $orderLine->getOrderId());
     }
 }
+
+
+/** Inserts a dvd ID and order ID into the given table (default = dvd_order_line table)
+ * @param $dvdId
+ * @param $orderId
+ * @param $table
+ * @return bool|mysqli_result
+ */
+function updateDvdOrder($dvdId, $orderId, $table = "dvd_order_line table")
+{
+    if (!isset($dbConnect)) {
+        if (!class_exists("dbConnect")) include('dbConnect.php');
+        $dbConnect = new dbConnect();
+    }
+
+    return $dbConnect->insertDvdOrder($dvdId, $orderId, $table);
+}

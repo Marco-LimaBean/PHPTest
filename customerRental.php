@@ -29,7 +29,6 @@ echo "<h3> Dvd Rental: </h3>";
 
 //get DVD to display
 $dvdList = getDvd();
-
 dvdTableStart();
 
 foreach ($dvdList as $value) {

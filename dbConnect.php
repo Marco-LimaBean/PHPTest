@@ -163,7 +163,7 @@ class dbConnect
         return $this->conn->query($query);
     }
 
-    /**
+    /** Updates a customer order.
      * @param $table
      * @param $set orderLine;
      * @param $where
@@ -175,6 +175,22 @@ class dbConnect
         `rent_date` = '" . addslashes($set->getRentDate()) . "', `actual_return_date` = '" . $set->getActualReturnDate()
             . "'";
         $query = "UPDATE " . $table . " SET " . $setQuery . " WHERE " . $where;
+
+        return $this->conn->query($query);
+    }
+
+    /** Inserts a dvd ID and order ID into the given table (default = dvd_order_line table)
+     * @param $dvdId int
+     * @param $orderId int
+     * @param string $table
+     * @return bool|mysqli_result
+     */
+    public function insertDvdOrder($dvdId, $orderId, $table = "dvd_order_line")
+    {
+        $values = "'" . $dvdId . "', '" . $orderId . "'";
+
+        $columnNames = "`dvd_id`, `order_id`";
+        $query = "INSERT INTO " . $table . " (" . $columnNames . ") VALUES (" . $values . ");";
 
         return $this->conn->query($query);
     }
