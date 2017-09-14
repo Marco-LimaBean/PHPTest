@@ -54,7 +54,11 @@ class dbConnect
     }
 
 
-    public function customerLogin($username, $password)
+    /**
+     * @param $username
+     * @return bool
+     */
+    public function customerLogin($username)
     {
         try {
             $result = mysqli_fetch_assoc($this->conn->query("SELECT password FROM customer WHERE id = " . intval($username)));
@@ -146,12 +150,46 @@ class dbConnect
 
     /**
      * @param $table
+     * @param $set orderLine
+     * @return bool|mysqli_result
+     */
+    public function insertOrder($table, $set)
+    {
+        $values = "'" . addslashes($set->getCustomerId()) . "', '" . addslashes($set->getDueDate()) . "', '" . $set->getRentDate() . "'";
+
+        $columnNames = "`customer_id`, `due_date`, `rent_date`";
+        $query = "INSERT INTO " . $table . " (" . $columnNames . ") VALUES (" . $values . ");";
+
+        $this->conn->query($query);
+        var_dump($this->conn);
+        return $this->conn->query($query);
+    }
+
+    /**
+     * @param $table
      * @param $where
      * @return bool|mysqli_result
      */
     public function delete($table, $where)
     {
         return $this->conn->query("DELETE FROM " . $table . " WHERE " . $where);
+    }
+
+    /**
+     * @param $table
+     * @param $set orderLine;
+     * @return bool|mysqli_result
+     */
+    public function updateOrder($table, $set)
+    {
+        $values = "'" . addslashes($set->getCustomerId()) . "', '" . addslashes($set->getDueDate()) . "', '" . $set->getRentDate() . "'";
+
+        $columnNames = "`customer_id`, `due_date`, `rent_date`";
+        $query = "INSERT INTO " . $table . " (" . $columnNames . ") VALUES (" . $values . ");";
+
+        $this->conn->query($query);
+        var_dump($this->conn);
+        return $this->conn->query($query);
     }
 
 }
