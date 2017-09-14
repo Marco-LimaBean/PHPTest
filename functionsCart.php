@@ -48,9 +48,9 @@ function updateOrderLine($orderLine)
         include('orderLine.php');
     }
 
-    if (!$orderLine->getId()) { //new order
+    if (!$orderLine->getOrderId()) { //new order
         return $dbConnect->insertOrder("order_line", $orderLine);
     } else {
-        return $dbConnect->updateOrder("order_line", $orderLine);
+        return $dbConnect->updateOrder("order_line", $orderLine, "id = " . $orderLine->getOrderId());
     }
 }

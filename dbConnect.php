@@ -160,12 +160,27 @@ class dbConnect
         $columnNames = "`customer_id`, `due_date`, `rent_date`";
         $query = "INSERT INTO " . $table . " (" . $columnNames . ") VALUES (" . $values . ");";
 
-        $this->conn->query($query);
-        var_dump($this->conn);
         return $this->conn->query($query);
     }
 
     /**
+     * @param $table
+     * @param $set orderLine;
+     * @param $where
+     * @return bool|mysqli_result
+     */
+    public function updateOrder($table, $set, $where)
+    {
+        $setQuery = "`customer_id` = " . $set->getOrderId() . ", `due_date` = \"" . addslashes($set->getDueDate()) . "\", 
+        `rent_date` = '" . addslashes($set->getRentDate()) . "', `actual_return_date` = '" . $set->getActualReturnDate()
+            . "'";
+        $query = "UPDATE " . $table . " SET " . $setQuery . " WHERE " . $where;
+
+        return $this->conn->query($query);
+    }
+
+
+    /** Runs a mysqli delete query.
      * @param $table
      * @param $where
      * @return bool|mysqli_result
@@ -173,23 +188,6 @@ class dbConnect
     public function delete($table, $where)
     {
         return $this->conn->query("DELETE FROM " . $table . " WHERE " . $where);
-    }
-
-    /**
-     * @param $table
-     * @param $set orderLine;
-     * @return bool|mysqli_result
-     */
-    public function updateOrder($table, $set)
-    {
-        $values = "'" . addslashes($set->getCustomerId()) . "', '" . addslashes($set->getDueDate()) . "', '" . $set->getRentDate() . "'";
-
-        $columnNames = "`customer_id`, `due_date`, `rent_date`";
-        $query = "INSERT INTO " . $table . " (" . $columnNames . ") VALUES (" . $values . ");";
-
-        $this->conn->query($query);
-        var_dump($this->conn);
-        return $this->conn->query($query);
     }
 
 }

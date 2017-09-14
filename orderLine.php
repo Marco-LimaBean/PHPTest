@@ -8,19 +8,20 @@
 
 class orderLine
 {
-    private $id, $customer_id, $rent_date, $due_date, $actual_return_date;
+    private $order_id, $customer_id, $rent_date, $due_date, $actual_return_date;
 
     /**
      * orderLine constructor.
-     * @param $id
      * @param $customer_id
      * @param $rent_date
      * @param $due_date
-     * @param $actual_return_date
+     * @param string $actual_return_date
+     * @param bool $order_id
+     * @param $order_id
      */
-    public function __construct($customer_id, $rent_date, $due_date, $actual_return_date = false, $id = false)
+    public function __construct($customer_id, $rent_date, $due_date, $actual_return_date = 'NULL', $order_id = false)
     {
-        $this->id = $id;
+        $this->order_id = $order_id;
         $this->customer_id = $customer_id;
         $this->rent_date = $rent_date;
         $this->due_date = $due_date;
@@ -30,17 +31,17 @@ class orderLine
     /**
      * @return int
      */
-    public function getId()
+    public function getOrderId()
     {
-        return $this->id;
+        return $this->order_id;
     }
 
     /**
-     * @param int $id
+     * @param int $order_id
      */
-    public function setId($id)
+    public function setOrderId($order_id)
     {
-        $this->id = $id;
+        $this->order_id = $order_id;
     }
 
     /**
@@ -105,5 +106,42 @@ class orderLine
     public function setActualReturnDate($actual_return_date)
     {
         $this->actual_return_date = $actual_return_date;
+    }
+}
+
+class orderLineItem extends orderLine
+{
+    private $dvdShort;
+
+    /**
+     * orderLineItem constructor.
+     * @param bool $order_id int
+     * @param $customer_id int
+     * @param $rent_date
+     * @param string $due_date
+     * @param string $actual_return_date
+     * @param array|dvdShort $dvdShort dvdShort
+     */
+    public function __construct($order_id, $customer_id, $rent_date, $due_date, $actual_return_date = 'NULL', array $dvdShort)
+    {
+        parent::__construct($customer_id, $rent_date, $due_date, $actual_return_date = 'NULL', $id = false);
+        if (!class_exists("dvdShort")) include("dvd.php");
+        $this->dvdShort = $dvdShort;
+    }
+
+    /**
+     * @return dvdShort
+     */
+    public function getDvdShort()
+    {
+        return $this->dvdShort;
+    }
+
+    /**
+     * @param dvdShort $dvdShort
+     */
+    public function setDvdShort($dvdShort)
+    {
+        $this->dvdShort = $dvdShort;
     }
 }

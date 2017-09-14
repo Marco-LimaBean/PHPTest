@@ -32,7 +32,8 @@ dvdTableEnd();
 
 if (isset($_POST['submitCart']) && $_POST = "Checkout") {
     $order = new orderLine($_SESSION['loggedIn'], date('Y-m-d', time()),
-        date('Y-m-d', strtotime(time() + strtotime("+14 days"))));
+        date('Y-m-d', strtotime(date('Y-m-d', time()) . "+ 14 days")));
+//    var_dump($order);
     updateOrderLine($order);
 }
 

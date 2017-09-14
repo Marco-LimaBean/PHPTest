@@ -27,18 +27,25 @@
             <li><a href="/customers">Customers</a></li>
             <li><a href="/dvds">DVDs</a></li>
             <li><a href="/rental">Rental</a></li>
+            <?php
+            if(!isset($_SESSION)) session_start();
+                if(isset($_SESSION['loggedIn'])) { ?>
+            <li><a href="/return">Return Rental</a></li>
+            <?php } ?>
         </ul>
         <ul class="nav navbar-nav navbar-right">
+
             <?php
                 if(!isset($_SESSION)) session_start();
-                if(isset($_SESSION['sCustomerOrder']) && strlen($_SESSION['sCustomerOrder']) > 6) {?>
+                if(isset($_SESSION['loggedIn'])) { ?>
+            <?php
+                    if(!isset($_SESSION)) session_start();
+                    if(isset($_SESSION['sCustomerOrder']) && strlen($_SESSION['sCustomerOrder']) > 6) {?>
             <li><a href="/cart">Cart</a></li>
             <?php }else{ ?>
             <li class="disabled"><a href="/cart">Cart </a></li>
             <?php } ?>
-            <?php
-                if(!isset($_SESSION)) session_start();
-                if(isset($_SESSION['loggedIn'])) { ?>
+
             <li><a href="/logout">Logout</a></li>
             <?php }else{ ?>
             <li><a href="/loginRedirect">Login </a></li>

@@ -6,29 +6,18 @@
  * Time: 7:27 AM
  */
 
-class dvd implements JsonSerializable
+class dvdShort
 {
-    private $id, $name, $description, $releaseDate, $category_id, $category_name, $count;
-
+    private $id, $name;
     /**
-     * dvd constructor.
+     * dvdShort constructor.
      * @param $id
      * @param $name
-     * @param $description
-     * @param $releaseDate
-     * @param $category_id
-     * @param $category_name
-     * @param int $count total number of DVD or how many DVD to add to the list
      */
-    public function __construct($id, $name, $description, $releaseDate, $category_id, $category_name = false, $count = 0)
+    public function __construct($id, $name)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->description = $description;
-        $this->releaseDate = $releaseDate;
-        $this->category_id = $category_id;
-        $this->category_name = $category_name;
-        $this->count = $count;
     }
 
     /**
@@ -61,6 +50,32 @@ class dvd implements JsonSerializable
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+}
+
+class dvd extends dvdShort implements JsonSerializable
+{
+    private $id, $name, $description, $releaseDate, $category_id, $category_name, $count;
+
+    /**
+     * dvd constructor.
+     * @param $id
+     * @param $name
+     * @param $description
+     * @param $releaseDate
+     * @param $category_id
+     * @param $category_name
+     * @param int $count total number of DVD or how many DVD to add to the list
+     */
+    public function __construct($id, $name, $description, $releaseDate, $category_id, $category_name = false, $count = 0)
+    {
+        parent::__construct($id, $name);
+        $this->description = $description;
+        $this->releaseDate = $releaseDate;
+        $this->category_id = $category_id;
+        $this->category_name = $category_name;
+        $this->count = $count;
     }
 
     /**
