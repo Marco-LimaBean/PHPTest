@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 14, 2017 at 04:34 PM
+-- Generation Time: Sep 15, 2017 at 11:07 AM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.8
 
@@ -52,12 +52,12 @@ INSERT INTO `category` (`id`, `category_name`) VALUES
 --
 
 CREATE TABLE `customer` (
-  `id`             int(6) NOT NULL,
-  `name`           varchar(255) DEFAULT NULL,
-  `surname`        varchar(255) DEFAULT NULL,
-  `contact_number` varchar(18)  DEFAULT NULL,
-  `email`          varchar(255) DEFAULT NULL,
-  `sa_id_number`   char(13)     DEFAULT NULL,
+  `id`             INT(6)       NOT NULL,
+  `name`           VARCHAR(255) DEFAULT NULL,
+  `surname`        VARCHAR(255) DEFAULT NULL,
+  `contact_number` VARCHAR(18)  DEFAULT NULL,
+  `email`          VARCHAR(255) DEFAULT NULL,
+  `sa_id_number`   CHAR(13)     DEFAULT NULL,
   `address`        VARCHAR(255) DEFAULT NULL,
   `password`       VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -92,7 +92,8 @@ VALUES
   (29, 'fFirtb', 'sFirtb', '123456789028', 'first@gmail.com', '1234567890281', '14 Limabean', ''),
   (30, 'fFirtb', 'sFirtb', '123456789028', 'first@gmail.com', '1234567890281', '14 Limabean', ''),
   (31, 'fFirtb', 'sFirtb', '123456789028', 'first@gmail.com', '1234567890281', '14 Limabean', ''),
-  (32, 'fFirta', 'sFirta', '123456789026', 'first@gmail.com', '1234567890261', '14 Limabean', '');
+  (34, '123', '123', '45645646', '123@123.com', '1234567890301', 'This is the address', ''),
+  (35, 'The Sixth', 'Wyk', '12039123011', 'mail@mail.com', '1234567890301', 'Test', '');
 
 -- --------------------------------------------------------
 
@@ -101,23 +102,24 @@ VALUES
 --
 
 CREATE TABLE `dvd` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `release_date` date NOT NULL,
-  `category_id` int(11) NOT NULL
+  `id`           int(11)      NOT NULL,
+  `name`         varchar(50)  NOT NULL,
+  `description`  varchar(255) NOT NULL,
+  `release_date` date         NOT NULL,
+  `category_id`  INT(11)      NOT NULL,
+  `isdeleted`    TINYINT(4)   NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `dvd`
 --
 
-INSERT INTO `dvd` (`id`, `name`, `description`, `release_date`, `category_id`) VALUES
-  (1, 'Die Hard', 'Snape\'s in it, you know you want to watch it.', '1998-09-01', 2),
+INSERT INTO `dvd` (`id`, `name`, `description`, `release_date`, `category_id`, `isdeleted`) VALUES
+  (1, 'Die Hard', 'Snape\'s in it, you know you want to watch it.\nIt\'s a good movie.', '1998-09-01', 2, 0),
   (2, 'Logan',
    'In the near future, a weary Logan (Hugh Jackman) cares for an ailing Professor X (Patrick Stewart) at a remote outpost on the Mexican border.',
-   '2017-03-01', 3),
-  (3, 'The Third Movie', 'This is the third movie entry in the database', '2017-09-14', 4);
+   '2017-03-01', 3, 0),
+  (3, 'The Third Movie', 'This is the third movie entry in the database', '2017-09-14', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -136,10 +138,14 @@ CREATE TABLE `dvd_order_line` (
 --
 
 INSERT INTO `dvd_order_line` (`id`, `dvd_id`, `order_id`) VALUES
-  (0, 1, 1),
-  (1, 2, 3),
-  (2, 3, 3),
-  (3, 1, 3);
+  (1, 3, 11),
+  (2, 3, 12),
+  (3, 2, 12),
+  (4, 1, 12),
+  (5, 3, 13),
+  (6, 1, 14),
+  (7, 1, 15),
+  (8, 1, 16);
 
 -- --------------------------------------------------------
 
@@ -148,8 +154,8 @@ INSERT INTO `dvd_order_line` (`id`, `dvd_id`, `order_id`) VALUES
 --
 
 CREATE TABLE `order` (
-  `id`                 int(11) NOT NULL,
-  `customer_id`        int(11) NOT NULL,
+  `id`                 INT(11) NOT NULL,
+  `customer_id`        INT(11) NOT NULL,
   `rent_date`          DATE    NOT NULL,
   `due_date`           DATE    NOT NULL,
   `actual_return_date` DATE DEFAULT NULL
@@ -162,7 +168,20 @@ CREATE TABLE `order` (
 INSERT INTO `order` (`id`, `customer_id`, `rent_date`, `due_date`, `actual_return_date`) VALUES
   (1, 1, '2017-09-14', '2017-09-28', NULL),
   (2, 1, '2017-09-14', '2017-09-12', NULL),
-  (3, 2, '2017-09-14', '2017-09-30', NULL);
+  (3, 2, '2017-09-14', '2017-09-30', NULL),
+  (4, 3, '2017-09-15', '2017-09-29', NULL),
+  (5, 3, '2017-09-15', '2017-09-29', NULL),
+  (6, 3, '2017-09-15', '2017-09-29', NULL),
+  (7, 3, '2017-09-15', '2017-09-29', NULL),
+  (8, 3, '2017-09-15', '2017-09-29', NULL),
+  (9, 3, '2017-09-15', '2017-09-29', NULL),
+  (10, 3, '2017-09-15', '2017-09-29', NULL),
+  (11, 3, '2017-09-15', '2017-09-29', '2017-09-15'),
+  (12, 3, '2017-09-15', '2017-09-29', '2017-09-15'),
+  (13, 3, '2017-09-15', '2017-09-29', '2017-09-15'),
+  (14, 3, '2017-09-15', '2017-09-29', '2017-09-15'),
+  (15, 3, '2017-09-15', '2017-09-29', '2017-09-15'),
+  (16, 3, '2017-09-15', '2017-09-29', NULL);
 
 --
 -- Indexes for dumped tables
@@ -216,7 +235,7 @@ ALTER TABLE `category`
 --
 ALTER TABLE `customer`
   MODIFY `id` INT(6) NOT NULL AUTO_INCREMENT,
-  AUTO_INCREMENT = 34;
+  AUTO_INCREMENT = 36;
 --
 -- AUTO_INCREMENT for table `dvd`
 --
@@ -224,11 +243,17 @@ ALTER TABLE `dvd`
   MODIFY `id` INT(11) NOT NULL AUTO_INCREMENT,
   AUTO_INCREMENT = 4;
 --
+-- AUTO_INCREMENT for table `dvd_order_line`
+--
+ALTER TABLE `dvd_order_line`
+  MODIFY `id` INT(11) NOT NULL AUTO_INCREMENT,
+  AUTO_INCREMENT = 9;
+--
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
   MODIFY `id` INT(11) NOT NULL AUTO_INCREMENT,
-  AUTO_INCREMENT = 4;
+  AUTO_INCREMENT = 17;
 --
 -- Constraints for dumped tables
 --
