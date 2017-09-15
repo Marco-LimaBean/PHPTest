@@ -61,7 +61,7 @@ function login($username, $password, $customer = true)
     }
 
     if ($customer) {
-        $hash = $dbConnect->customerLogin($username, $password);
+        $hash = $dbConnect->customerLogin($username);
         return password_verify($password, $hash);
     }
     return false;
@@ -69,17 +69,16 @@ function login($username, $password, $customer = true)
 
 /** Either updates or creates a new customer based on the given customer array.
  * @param $customer customer
- * @param bool $isNew default is false;
  * @return bool|mysqli_result
  */
-function updateCustomer($customer, $isNew = false)
+function updateCustomer($customer)
 {
     if (!isset($dbConnect)) {
         if (!class_exists("dbConnect")) include('dbConnect.php');
         $dbConnect = new dbConnect();
     }
 
-    if ($isNew) {
+    if (!$customer->getId()) {
         return $dbConnect->insertCustomer("customer", $customer);
     } else {
         return $dbConnect->updateCustomer("customer", $customer, "id = " . $customer->getId());
@@ -132,12 +131,7 @@ function customerTableRowEdit($customerArray)
                     <td> 
                         " . htmlspecialchars($customerArray->getId()) . "
                     </td>";
-        tableRowEditTD('name', $customerArray->getName(), $customerArray->getName());
-        tableRowEditTD('surname', $customerArray->getSurname(), $customerArray->getSurname());
-        tableRowEditTD('contact_number', $customerArray->getContactNumber(), $customerArray->getContactNumber());
-        tableRowEditTD('email', $customerArray->getEmail(), $customerArray->getEmail(), "true", "email");
-        tableRowEditTD('sa_id_number', $customerArray->getSaIdNumber(), $customerArray->getSaIdNumber());
-        tableRowEditTD('address', $customerArray->getAddress(), $customerArray->getAddress());
+    customerTableRowEditFields($customerArray);
     echo "<td>
                 <input type='submit' name='updateCustomer' value='save'> 
                 <input type='submit' name='deleteCustomer' value='delete'>
@@ -146,6 +140,39 @@ function customerTableRowEdit($customerArray)
         </form>
     </tr>";
 
+}
+
+/** Generates table row editable of customerArray
+ * @param $customerArray customer
+ */
+function customerTableRowEditFields($customerArray)
+{
+    tableRowEditTD('name', $customerArray->getName(), $customerArray->getName());
+    tableRowEditTD('surname', $customerArray->getSurname(), $customerArray->getSurname());
+    tableRowEditTD('contact_number', $customerArray->getContactNumber(), $customerArray->getContactNumber());
+    tableRowEditTD('email', $customerArray->getEmail(), $customerArray->getEmail(), "true", "email");
+    tableRowEditTD('sa_id_number', $customerArray->getSaIdNumber(), $customerArray->getSaIdNumber());
+    tableRowEditTD('address', $customerArray->getAddress(), $customerArray->getAddress());
+}
+
+/** Generates an editable row of customers.
+ * @param $customerArray customer
+ */
+function customerTableRowEditNew($customerArray)
+{
+    echo "<tr>
+                <form action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "' method='post'>
+                    <td> 
+                        " . htmlspecialchars($customerArray->getId()) . "
+                    </td>";
+    customerTableRowEditFields($customerArray);
+    echo "<td>
+                <input type='submit' name='newCustomer' value='New Customer'> 
+                <input type='submit' name='deleteCustomer' value='delete'>
+                <input type='hidden' name='id' value='" . htmlspecialchars($customerArray->getId()) . "'>
+            </td>" . "
+        </form>
+    </tr>";
 }
 
 

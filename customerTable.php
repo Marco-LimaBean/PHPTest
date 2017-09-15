@@ -44,21 +44,21 @@ $_SESSION['customer'] = getCustomer("1=1");
         $_SESSION['customerIDList'] = array();
 
         foreach ($_SESSION['customer'] as $key => $customer) {
-            /** @var customer $value */
+            /** @var customer $customer */
             array_push($_SESSION['customerIDList'], $key);
-                if(isset($_GET['id'])) {
-                    //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
-                    $_SESSION['userEditing'] = $_GET['id'];
-                }
+            if (isset($_GET['id'])) {
+                //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
+                $_SESSION['userEditing'] = $_GET['id'];
+            }
 
 
             if (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $customer->getId()) {
                 $_SESSION['userEditing'] = $customer->getId();
                 customerTableRowEdit($customer);
-                } else {
+            } else {
                 customerTableRow($customer);
-                }
             }
+        }
 
         if (isset($_POST['addCustomer'])) {
             //stop the user from editing other things:
@@ -66,7 +66,7 @@ $_SESSION['customer'] = getCustomer("1=1");
             $addCustID = getHighestCustID() + 1;
             //save which one he is editing now:
             $_SESSION['userEditing'] = $addCustID;
-            customerTableRowEdit(new Customer());
+            customerTableRowEditNew(new Customer());
         }
 
         ?>
@@ -77,28 +77,28 @@ $_SESSION['customer'] = getCustomer("1=1");
 <?php
 
 //if user clicks the delete hyperlink, query string of ?id=num&delete=true;
-if(isset($_GET['id'], $_GET['delete']) || isset($_SESSION['userEditing'], $_POST['deleteCustomer'])){
+if (isset($_GET['id'], $_GET['delete']) || isset($_SESSION['userEditing'], $_POST['deleteCustomer'])) {
     $deleteID = (isset($_GET['id']) ? $_GET['id'] : $_SESSION['userEditing']);
     $delete = (isset($_GET['delete']) ? $_GET['delete'] : $_POST['deleteCustomer']);
-    if(is_numeric($deleteID) && $delete === "TRUE"){
+    if (is_numeric($deleteID) && $delete === "TRUE") {
         $message = NULL;
 
-        if(deleteCustomer($_GET['id'])){
+        if (deleteCustomer($_GET['id'])) {
             $message = "Customer has been deleted";
-        }else{
+        } else {
             $message = "There was an error deleting the customer.";
         }
 
         jsAlert($message);
         redirectQuery("id=" . $_GET['id']);
 
-    }else{
+    } else {
         echo "An error occurred, please use a website GUI";
     }
 }
 
 //if the save button is clicked to update the customer
-if (isset($_POST['updateCustomer'])) {
+if (isset($_POST['updateCustomer']) || isset($_POST['newCustomer'])) {
     //check if the user submitted all variables (nothing empty)
     if (isset($_POST['id'], $_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email']
         , $_POST['sa_id_number'], $_POST['address'])) {
@@ -131,8 +131,14 @@ if (isset($_POST['updateCustomer'])) {
             $updateCustomer = new Customer($_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email'],
                 $_POST['sa_id_number'], $_POST['address'], $_SESSION['userEditing']);
 
+            //in case it's a new customer:
+            if (isset($_POST['newCustomer']) && $_POST['newCustomer'] == 'New Customer') {
+                $updateCustomer->setId(FALSE);
+                $_POST['updateCustomer'] = "save";
+            }
+
             if ($_POST['updateCustomer'] == "save") {
-                if (!updateCustomer($updateCustomer, !in_array($_SESSION['userEditing'], $_SESSION['customerIDList']))) {
+                if (!updateCustomer($updateCustomer)) {
                     //if it failed to update the customer.
                     jsAlert("Failed to update customer, have you already submitted the form? 
                     please contact your WebAdmin (CODE: 1004)");

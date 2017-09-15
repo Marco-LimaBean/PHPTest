@@ -6,7 +6,7 @@
  * Time: 11:13 AM
  */
 
-$title = "Rental";
+$title = "Return rental";
 include_once('html/defaultHeader.html');
 if (!isset($_SESSION)) session_start();
 
