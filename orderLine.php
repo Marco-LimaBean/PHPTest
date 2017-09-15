@@ -8,7 +8,7 @@
 
 class orderLine
 {
-    private $order_id, $customer_id, $rent_date, $due_date, $actual_return_date;
+    protected $order_id, $customer_id, $rent_date, $due_date, $actual_return_date;
 
     /**
      * @param $customer_id

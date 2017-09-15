@@ -1,30 +1,26 @@
 $(document).ready(function () {
 
-    // $dvd = $('[name=dvd]');
-    $('[name=newName]').val('123');
+    //get the Query String parameters: (http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html)
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
 
-    // JSON.parse('dvdList');
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
 
-
-    xmlhttp = new XMLHttpRequest();
-    dvdList = "not overwritten";
-
-    //class for dvd:
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            dvdList = JSON.parse(this.responseText);
-            // $('[name=test]').val(myObj.data(1));
-            // dvdList = myObj;
-            $('[name=test]').val(dvdList[0]['name']);
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
         }
     };
-    xmlhttp.open("POST", "dvdEditJson.php");
-    xmlhttp.send();
 
+    dvdList = "not overwritten";
 
-    // language=JQuery-CSS
-    $('[name=dvd]').change(function () {
+    //update form fields
+    function updateFormFields() {
+        //alert('updateFormFields called');
         selectedDvd = $('[name=dvd]').find(":selected").val();
         for (var i = 0; i < Object.keys(dvdList).length; i++) {
             if (dvdList[i]['id'] === parseInt(selectedDvd)) selectedDvd = dvdList[i];
@@ -33,7 +29,35 @@ $(document).ready(function () {
         $('[name=date]').val(selectedDvd['release_date']);
         $('[name=category]').val(selectedDvd['category_id']);
         $('[name=description]').val(selectedDvd['description']);
+    };
+
+    //class for dvd:
+
+    $.get('dvdEditJson.php', {}, function (response) {
+        //the list of dvd from the server:
+        dvdList = response;
+
+        var id = getUrlParameter("id");
+        // alert('get called. ID: ' + id);
+
+        if (!isNaN(id)) {
+            // alert('is a number')
+            updateFormFields();
+        }
+
+
+        $('[name="dvd"]').change(
+            //ask this one.
+            function () {
+                updateFormFields()
+            }
+        );
     });
+
+    //if get id (the dvd id) has been set.
+
+
+    //submit the form to the server on submit.
 
     // function send(){
     var submitButton = $('[name=reset]');

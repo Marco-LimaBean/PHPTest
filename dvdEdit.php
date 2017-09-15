@@ -13,10 +13,17 @@ if (!class_exists("dvd")) require("dvd.php");
 
 
 //print category form:
-$dvdList = getDvd();
-$categoryList = getCategories();
+$dvdList = getDvd(); //get all DVD's that are not soft-deleted to return.
+$categoryList = getCategories(); //get all the categories that the user can select from.
 
-dvdEditForm($dvdList, $categoryList);
+
+//if the user has selected edit DVD on the DVD page (dvdtable.php). Otherwise no movie will be pre-selected.
+if (isset($_GET['id'])) {
+    dvdEditForm($dvdList, $categoryList, intval($_GET['id']));
+} else {
+    dvdEditForm($dvdList, $categoryList);
+}
+
 
 //JQUERY
 addScript("/js/dvd-edit.js");

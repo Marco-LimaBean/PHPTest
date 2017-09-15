@@ -49,9 +49,9 @@ function updateOrderLine($orderLine)
     }
 
     if (!$orderLine->getOrderId()) { //new order
-        return $dbConnect->insertOrder("order_line", $orderLine);
+        return $dbConnect->insertOrder("`order`", $orderLine);
     } else {
-        return $dbConnect->updateOrder("order_line", $orderLine, "id = " . $orderLine->getOrderId());
+        return $dbConnect->updateOrder("`order`", $orderLine, "`id` = " . $orderLine->getOrderId());
     }
 }
 
@@ -62,7 +62,7 @@ function updateOrderLine($orderLine)
  * @param $table
  * @return bool|mysqli_result
  */
-function updateDvdOrder($dvdId, $orderId, $table = "dvd_order_line table")
+function updateDvdOrder($dvdId, $orderId, $table = "dvd_order_line")
 {
     if (!isset($dbConnect)) {
         if (!class_exists("dbConnect")) include('dbConnect.php');

@@ -22,21 +22,14 @@ function getDvd()
     $resultsDvds = $dbConnect->fetch("
         SELECT dvd.id, dvd.name, dvd.description,dvd.release_date, dvd.category_id, category.category_name
         FROM dvd
-        INNER JOIN category ON category.id = dvd.category_id;");
-
-    echo "RESULTS: <pre>";
-    var_dump($resultsDvds);
-
+        INNER JOIN category ON category.id = dvd.category_id", ["isdeleted = 0"]);
 
     //convert results to array of dvd objects
     foreach ($resultsDvds as $key => $resultDvd) {
         array_push($dvd, new dvd($resultDvd['id'], $resultDvd['name'], $resultDvd['description'],
             $resultDvd['release_date'], $resultDvd['category_id'], $resultDvd['category_name']));
-        echo "DVD (" . $key . ") :";
-        var_dump($dvd);
     }
 
-    echo "</pre>";
 
     return $dvd;
 }
@@ -50,8 +43,23 @@ function updateDvd($dvd, $isNew = false){
     if (!class_exists("dbConnect")) require("dbConnect.php");
     if (!class_exists("dvd")) require("dvd.php");
     $dbConnect = new dbConnect();
-    if($isNew) $dbConnect->insertDvd("dvd", $dvd);
-    else $dbConnect->updateDvd("dvd", $dvd, "id = " . $dvd->getId());
+    if ($isNew) {
+        return $dbConnect->insertDvd("dvd", $dvd);
+    }
+    return $dbConnect->updateDvd("dvd", $dvd, "id = " . $dvd->getId());
+}
+
+/** Deletes the dvd object.
+ * @param $dvd dvd
+ * @return mixed
+ */
+function deleteDvd($dvd)
+{
+    if (!class_exists("dbConnect")) require("dbConnect.php");
+    if (!class_exists("dvd")) require("dvd.php");
+    $dbConnect = new dbConnect();
+
+    return $dbConnect->softDelete("`dvd`", "id = " . $dvd->getId());
 }
 
 /**
@@ -167,9 +175,11 @@ function dvdChangeArray($array, $post, $value){
 /**
  * @param $dvdList array
  * @param $category category[]
- * @var $dvd dvd
+ * @param bool|int $selected
+ * @internal param dvd $dvd
  */
-function dvdEditForm($dvdList, $category){
+function dvdEditForm($dvdList, $category, $selected = false)
+{
     ?>
     <div class="dvdEditForm text-center">
         <h1> DVD Edit: </h1>
@@ -179,8 +189,14 @@ function dvdEditForm($dvdList, $category){
                 <option value="---" selected disabled> --- </option>
                 <?php
                     foreach ($dvdList as $dvd){
-                        echo "<option value='" . htmlspecialchars($dvd->getId()). "'> " . htmlspecialchars($dvd->getName()) . " (" . htmlspecialchars($dvd->getReleaseDate()). ")
+                        if ($selected && $selected == $dvd->getId()) {
+                            echo "<option selected value='" . htmlspecialchars($dvd->getId()) . "'> " . htmlspecialchars($dvd->getName()) . " (" . htmlspecialchars($dvd->getReleaseDate()) . ")
                         </option>";
+                        } else {
+                            echo "<option value='" . htmlspecialchars($dvd->getId()) . "'> " . htmlspecialchars($dvd->getName()) . " (" . htmlspecialchars($dvd->getReleaseDate()) . ")
+                            </option>";
+                        }
+
                     }
 
                 ?>
@@ -201,13 +217,15 @@ function dvdEditForm($dvdList, $category){
                 ?>
             </select>
             <br>
-            <label>New Description: </label>
+            <label>New Description*: </label>
             <br>
             <textarea name="description" form="editDVD" title="New Description" cols="60"></textarea>
             <br>
             <input name="reset" type="reset">
             <input name="submitEditDvd" type="submit" value="Edit DVD">
         </form>
+        <div class='text-centered'><i> *Note that description will only register 250 characters.</i></div>
+        ;
         <div id="message"></div>
     </div>
     <?php
@@ -249,7 +267,7 @@ function dvdTableRow($dvdArray)
             <td>" . htmlspecialchars($dvdArray->getDescription()) . "</td>" . "
             <td>" . htmlspecialchars($dvdArray->getReleaseDate()) . "</td>" . "
             <td>" . htmlspecialchars($dvdArray->getCategoryName()) . "</td>" . "
-            <td> <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&edit=TRUE'>Add</a> 
+            <td> <a href='dvdEdit?id=" . htmlspecialchars($dvdArray->getId()) . "'>Edit</a> 
                 <a href='?id=" . htmlspecialchars($dvdArray->getId()) . "&remove=TRUE'>Delete</a>
             </td>" . "
          </tr>";

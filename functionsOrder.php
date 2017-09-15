@@ -19,7 +19,7 @@ function getOutstanding($customerId)
                                     FROM `order` 
                                     INNER JOIN dvd_order_line ON dvd_order_line.`order_id` = `order`.`id` 
                                     INNER JOIN `dvd` ON `dvd`.`id` = dvd_order_line.`dvd_id`",
-        "order.customer_id = $customerId", "order.actual_return_date IS NULL");
+        ["`order`.`customer_id` = $customerId", "`order`.actual_return_date IS NULL"]);
 
 
     if (!empty($resultsOutstandingItems)) {//if there are results
@@ -68,7 +68,6 @@ function getOutstanding($customerId)
             }
 
         }
-
         //return all outstanding order line items.
         return $outstandingOrderLine;
     } else {

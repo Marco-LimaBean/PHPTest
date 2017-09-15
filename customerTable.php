@@ -43,24 +43,29 @@ $_SESSION['customer'] = getCustomer("1=1");
 
         $_SESSION['customerIDList'] = array();
 
-        foreach ($_SESSION['customer'] as $key => $value) {
+        foreach ($_SESSION['customer'] as $key => $customer) {
+            /** @var customer $value */
             array_push($_SESSION['customerIDList'], $key);
                 if(isset($_GET['id'])) {
                     //fixes bug in regards to there being both a $_GET['id'] and a $_SESSION['userEditing'] causing two rows to be edited.
                     $_SESSION['userEditing'] = $_GET['id'];
                 }
 
-                if (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $value->getId()) {
-                    $_SESSION['userEditing'] = $value->getId();
-                    customerTableRowEdit($value);
+
+            if (isset($_SESSION['userEditing']) && $_SESSION['userEditing'] == $customer->getId()) {
+                $_SESSION['userEditing'] = $customer->getId();
+                customerTableRowEdit($customer);
                 } else {
-                    customerTableRow($value);
+                customerTableRow($customer);
                 }
             }
 
         if (isset($_POST['addCustomer'])) {
+            //stop the user from editing other things:
             unset($_SESSION['userEditing'], $_GET['id'], $_POST['addCustomer']);
             $addCustID = getHighestCustID() + 1;
+            //save which one he is editing now:
+            $_SESSION['userEditing'] = $addCustID;
             customerTableRowEdit(new Customer());
         }
 
@@ -95,10 +100,8 @@ if(isset($_GET['id'], $_GET['delete']) || isset($_SESSION['userEditing'], $_POST
 //if the save button is clicked to update the customer
 if (isset($_POST['updateCustomer'])) {
     //check if the user submitted all variables (nothing empty)
-    echo "<br>1. update customer clicked";
     if (isset($_POST['id'], $_POST['name'], $_POST['surname'], $_POST['contact_number'], $_POST['email']
         , $_POST['sa_id_number'], $_POST['address'])) {
-        echo "<br>2. isset checks passed ";
         do {
             /*
              * SCRUBBING USER DATA
@@ -110,7 +113,6 @@ if (isset($_POST['updateCustomer'])) {
                 //not a valid e-mail, fall back to the alert
                 break;
             }
-            echo "<br>3. passed email check ";
 
             //check if the sa_id_number is valid
             $invalidError = "Please enter a valid South African ID Number";
@@ -118,8 +120,6 @@ if (isset($_POST['updateCustomer'])) {
                 //not a valid e-mail, fall back to the alert
                 break;
             }
-
-            echo "<br>3. passed valid ID check ";
 
             //set control variable to null for invalid data catch to not trigger
             $invalidError = NULL;
@@ -134,8 +134,8 @@ if (isset($_POST['updateCustomer'])) {
             if ($_POST['updateCustomer'] == "save") {
                 if (!updateCustomer($updateCustomer, !in_array($_SESSION['userEditing'], $_SESSION['customerIDList']))) {
                     //if it failed to update the customer.
-                    echo "Failed to update customer";
-                    sleep(5);
+                    jsAlert("Failed to update customer, have you already submitted the form? 
+                    please contact your WebAdmin (CODE: 1004)");
                 }
                 unset($_SESSION['userEditing']);
             }

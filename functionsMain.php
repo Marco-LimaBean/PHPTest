@@ -36,7 +36,7 @@ function redirect($url){
 }
 
 /** Redirects to same page with query string appended
- * @param $query \http\Url redirect to chosen http url
+ * @param $query \http\Url|String redirect to chosen http url
  */
 function redirectQuery($query){
     echo '<META HTTP-EQUIV=REFRESH CONTENT="1; url=?'. $query .'">';

@@ -94,7 +94,7 @@ class dbConnect
         return $this->conn->query($query);
     }
 
-    /**
+    /** Insert a new customer into the database
      * @param $table
      * @param $set customer
      * @return bool|mysqli_result
@@ -116,7 +116,7 @@ class dbConnect
         return $this->conn->query($query);
     }
 
-    /**
+    /** Updates the DVD. Use the date function to convert the now time to submit it today.
      * @param $table
      * @param $set dvd array of dvd
      * @param $where
@@ -133,7 +133,7 @@ class dbConnect
         return $this->conn->query($query);
     }
 
-    /**
+    /** Inserts a dvd to the database
      * @param $table
      * @param $set dvd
      * @return bool|mysqli_result
@@ -148,7 +148,7 @@ class dbConnect
         return $this->conn->query($query);
     }
 
-    /**
+    /** Inserts an order into the database using an array of orderLine
      * @param $table
      * @param $set orderLine
      * @return bool|mysqli_result
@@ -171,11 +171,10 @@ class dbConnect
      */
     public function updateOrder($table, $set, $where)
     {
-        $setQuery = "`customer_id` = " . $set->getOrderId() . ", `due_date` = \"" . addslashes($set->getDueDate()) . "\", 
-        `rent_date` = '" . addslashes($set->getRentDate()) . "', `actual_return_date` = '" . $set->getActualReturnDate()
+        $setQuery = "`customer_id` = " . $set->getCustomerId() . ", `rent_date` = '" . addslashes($set->getRentDate())
+            . "', `due_date` = '" . addslashes($set->getDueDate()) . "', `actual_return_date` = '" . $set->getActualReturnDate()
             . "'";
         $query = "UPDATE " . $table . " SET " . $setQuery . " WHERE " . $where;
-
         return $this->conn->query($query);
     }
 
@@ -204,6 +203,17 @@ class dbConnect
     public function delete($table, $where)
     {
         return $this->conn->query("DELETE FROM " . $table . " WHERE " . $where);
+    }
+
+    /** Edits the isdelted column to be 1. set the $delete to 0 for un-delete.
+     * @param $table
+     * @param $where
+     * @param int $delete only 0 or 1.
+     * @return bool|mysqli_result
+     */
+    public function softDelete($table, $where, $delete = 1)
+    {
+        return $this->conn->query("UPDATE " . $table . "SET isdeleted = " . $delete . " WHERE " . $where);
     }
 
 }

@@ -15,8 +15,6 @@ if(!isset($dbConnect)){
 }
 
 if(isset($_POST['dvd'])){
-
-
     $dvd = dvdConvertFromJSON($_POST['dvd']);
     if(get_class($dvd) == "dvd"){
         updateDvd($dvd);

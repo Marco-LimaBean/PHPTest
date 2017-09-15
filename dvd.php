@@ -8,7 +8,7 @@
 
 class dvdShort
 {
-    private $id, $name;
+    protected $id, $name;
     /**
      * dvdShort constructor.
      * @param $id
@@ -56,7 +56,7 @@ class dvdShort
 
 class dvd extends dvdShort implements JsonSerializable
 {
-    private $id, $name, $description, $releaseDate, $category_id, $category_name, $count;
+    private $description, $releaseDate, $category_id, $category_name, $count;
 
     /**
      * dvd constructor.

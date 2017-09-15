@@ -13,11 +13,25 @@ include_once("functionsMain.php");
 
 
 //get DVDs list
-if(!isset($dvdList)){
-    //could store this in session, but would need to make autoload function in DVD, which is over scope.
-    $dvdList = getDvd();
-}
+/** @var array|dvd $dvdList dvdList is an array of dvd objects */
+$dvdList = getDvd();
 
+//if delete DVD is clicked
+if (isset($_GET['id'], $_GET['remove'])) {
+    //make sure the get is correctly set
+    if (is_numeric($_GET['id']) && $_GET['remove'] === 'TRUE') {
+
+        echo "starting foreach dvdList";
+
+        foreach ($dvdList as $dvd) {
+            if ($_GET['id'] == $dvd->getId()) {
+                echo "<br> id found" . $_GET['id'];
+                deleteDvd($dvd);
+            }
+        }
+
+    }
+}
 
 //printing out of table
 dvdTableStart();

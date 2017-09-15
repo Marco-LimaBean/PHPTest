@@ -41,6 +41,11 @@ foreach ($dvdList as $value) {
 
 dvdTableEnd();
 
+//proceed to checkout button if items are in the cart.
+if (!empty($customerOrder)) {
+    echo "<a href='cart'><input type='submit' value='Proceed to Checkout'></a>";
+}
+
 /*
  * END OF DISPLAY
  */

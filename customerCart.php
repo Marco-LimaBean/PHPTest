@@ -24,7 +24,6 @@ if (!isset($customerOrder) || $customerOrder == NULL) {
 }
 
 dvdTableStart();
-var_dump($customerOrder);
 foreach ($customerOrder as $value) {
     cartTableRow($value);
 }
@@ -42,7 +41,7 @@ if (isset($_POST['submitCart']) && $_POST = "Checkout") {
         )
     );
 
-    //"submit" to the database
+    //"submit" to the database to get an orderId.
     updateOrderLine($order);
 
     //get the order's id to rent out the specific dvd's.
@@ -52,16 +51,13 @@ if (isset($_POST['submitCart']) && $_POST = "Checkout") {
 
     //checkout item's for each dvd in the array save the dvd and the customer id to the db.
     foreach ($customerOrder as $orderDvd) {
-        echo "<pre>";
-        var_dump($customerOrder);
-        updateDvdOrder($orderDvd->getDvdId(), $order->getOrderId());
+        updateDvdOrder($orderDvd->getId(), $order->getOrderId());
     }
 
     //after completion, tell the user it has succeeded, clear out the cart and redirect to the return rental page.
     jsAlert("Checkout succeeded");
     unset($_SESSION['sCustomerOrder']);
     redirect("return");
-
 
 }
 
